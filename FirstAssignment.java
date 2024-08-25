@@ -8,8 +8,8 @@
  *	To compile MS Powershell:	javac -cp ".;mvAcm.jar" FirstAssignment.java
  *	To execute MS Powershell:	java -cp ".;mvAcm.jar" FirstAssignment
  *
- *	@author	Your name
- *	@since	Today's date
+ *	@author	Harly Liu
+ *	@since	8/24/2024
  */
 import java.awt.Font;
 
