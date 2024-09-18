@@ -1,0 +1,53 @@
+/*
+F1 = moveForward();
+F2 = turnLeft();
+F3 = turnAround();
+F4 = turnRight();
+F5 = pickBeeper();
+F6 = dropBeeper();
+*/
+/*
+F1 = moveForward();
+F2 = turnLeft();
+F3 = turnAround();
+F4 = turnRight();
+F5 = pickBeeper();
+F6 = dropBeeper();
+*/
+
+
+void saveTheFlower() {
+    moveForward();
+    if(onBeeper()){
+    	pickBeeper();
+    }
+    turnLeft();
+    climbUpStairs();
+    dropBeeper();
+    turnRight();
+    climbDownStairs();
+}
+
+void climbUpStairs() {
+    repeat(4) {
+        moveForward();
+        moveForward();
+        turnRight();
+        moveForward();
+        turnLeft();
+    }
+}
+
+void climbDownStairs() {
+    repeat(4) {
+        moveForward();
+        turnRight();
+        moveForward();
+        moveForward();
+        turnLeft();
+        
+    }
+}
+
+
+
