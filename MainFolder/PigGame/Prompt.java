@@ -62,7 +62,7 @@ public class Prompt
 					System.err.println("ERROR: BufferedReader could not read line");
 				}
 			}
-		}while(input.length()>1);
+		}while(input.length() != 1);
 		
 		return input.charAt(0);
 	}
