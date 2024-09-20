@@ -190,10 +190,6 @@ public class PigGame {
 				currpoints += val;
 				System.out.println("Computer turn score: " + currpoints);
 				System.out.println("Computer total score: " + computerpoints);
-				if (computerpoints + currpoints >= 100){
-					computerpoints += currpoints;
-					break;
-				}
 			}
 			System.out.println("Computer total score: " + computerpoints);
 		}
