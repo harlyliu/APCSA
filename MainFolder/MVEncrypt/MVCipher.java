@@ -49,7 +49,7 @@ public class MVCipher {
 		do{
 			key = Prompt.getString("Please input a word to use as key (letters only) ");
 		}while(!isValid(key));
-		key.toUpperCase();
+		key = key.toUpperCase();
 		/* Prompt for encrypt or decrypt */
 		int encryptOrDecrypt = Prompt.getInt("Encrypt or decrypt? (1, 2)");
 		/* Prompt for an input file name */
@@ -95,8 +95,6 @@ public class MVCipher {
 				else{
 					if ((int)currline.charAt(i)  >= 65 && 
 					(int)currline.charAt(i) <=90){
-						System.out.println(currline.charAt(i));
-						System.out.println(shift);
 						newchar = (char)(((int)currline.charAt(i)-65-shift+26)%26 + 65);
 					}
 					else{
