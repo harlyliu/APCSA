@@ -11,15 +11,24 @@
 public class MVCipher {
 	
 	// fields go here
-	private final int NUM_LETTERS = 26;
+	private final int NUM_LETTERS = 26;//amount of letters in the alphabet
+	
 	/** Constructor */
 	public MVCipher() { }
 	
+	/**Main method. creates object and uses it to run.
+	 * @param none
+	 * @return none
+	 * */
 	public static void main(String[] args) {
 		MVCipher mvc = new MVCipher();
 		mvc.run();
 	}
 	
+	/**Checks if the input key is valid or  not
+	 * @param string
+	 * @return boolean(true if it valid, false if it isn't)
+	 */
 	public boolean isValid(String str){
 		if (str.length() < 3){
 			 System.out.println("ERROR: Key must be all letters and at"+
@@ -37,7 +46,12 @@ public class MVCipher {
 	}
 	
 	/**
-	 *	Method header goes here
+	 *	Runs the bulk of the encrypt and decrypt code 
+	 * Keep track of which letter of the key you're on. 
+	 * Takes in line from input file. iterate through every character 
+	 * in the line and shift each accordingly
+	 * @param none
+	 * @return none
 	 */
 	public void run() {
 		System.out.println("\n Welcome to the MV Cipher machine!\n");
@@ -90,19 +104,23 @@ public class MVCipher {
 				if (encryptOrDecrypt == 1){
 					if (currline.charAt(i)  >= 'A' && 
 					currline.charAt(i) <='Z'){
-						newchar = (char)((currline.charAt(i)-'A' + shift)%NUM_LETTERS + (int)'A');
+						newchar = (char)((currline.charAt(i)-'A' + shift)
+							%NUM_LETTERS + (int)'A');
 					}
 					else{
-						newchar = (char)((currline.charAt(i)-'a' + shift)%NUM_LETTERS + (int)'a');
+						newchar = (char)((currline.charAt(i)-'a' + shift)
+							%NUM_LETTERS + (int)'a');
 					}
 				}
 				else{
 					if (currline.charAt(i)  >= 'A' && 
 					currline.charAt(i) <='Z'){
-						newchar = (char)((currline.charAt(i)-'A'-shift+NUM_LETTERS)%NUM_LETTERS + (int)'A');
+						newchar = (char)((currline.charAt(i)-'A'-shift
+							+NUM_LETTERS)%NUM_LETTERS + (int)'A');
 					}
 					else{
-						newchar = (char)((currline.charAt(i)-'a'-shift+NUM_LETTERS)%NUM_LETTERS + (int)'a');
+						newchar = (char)((currline.charAt(i)-'a'-shift
+							+NUM_LETTERS)%NUM_LETTERS + (int)'a');
 					}
 				}
 				currkey++;
@@ -121,8 +139,5 @@ public class MVCipher {
 				+" created using the keyword -> " + key);
 		}
 		output.close();
-	}
-	
-	// other methods go here
-	
+	}	
 }
