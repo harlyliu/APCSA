@@ -11,7 +11,7 @@
 public class MVCipher {
 	
 	// fields go here
-		
+	private final int NUM_LETTERS = 26;
 	/** Constructor */
 	public MVCipher() { }
 	
@@ -27,8 +27,8 @@ public class MVCipher {
 			 return false;
 		}
 		for (int i = 0; i < str.length(); i++){
-			if (!((int)str.charAt(i) >= 65 &&  (int)str.charAt(i) <=90)
-				&& !((int)str.charAt(i)  >= 97 && (int)str.charAt(i) <=122)){
+			if (!(str.charAt(i) >= 'A' &&  str.charAt(i) <= 'Z')
+					&& !(str.charAt(i)  >= 'a' && str.charAt(i) <='z')){
 				System.out.println("ERROR: Only allowed to use alphabet");
 				return false;
 			} 
@@ -46,14 +46,18 @@ public class MVCipher {
 		   Do not let the key contain anything but alpha
 		   Use the Prompt class to get user input */
 		String key;
+		System.out.println();
 		do{
 			key = Prompt.getString("Please input a word to use as key (letters only) ");
 		}while(!isValid(key));
 		key = key.toUpperCase();
 		/* Prompt for encrypt or decrypt */
+		System.out.println();
 		int encryptOrDecrypt = Prompt.getInt("Encrypt or decrypt? (1, 2)");
+		System.out.println();
 		/* Prompt for an input file name */
 		String inFileName = "";
+		System.out.println();
 		if (encryptOrDecrypt == 1){
 			inFileName = Prompt.getString("Name of file to encrypt");
 		}
@@ -65,7 +69,7 @@ public class MVCipher {
 		
 		String outputFileName = "";
 		outputFileName = Prompt.getString("Name of output file");
-		
+		System.out.println();
 		/* Read input file, encrypt or decrypt, and print to output file */
 		Scanner input = FileUtils.openToRead(inFileName);
 		PrintWriter output = FileUtils.openToWrite(outputFileName);
@@ -76,29 +80,29 @@ public class MVCipher {
 			ansstring = "";
 			String currline = input.nextLine();
 			for (int i = 0; i < currline.length(); i++){
-				if (!((int)currline.charAt(i) >= 65 &&  (int)currline.charAt(i) <=90)
-					&& !((int)currline.charAt(i)  >= 97 && (int)currline.charAt(i) <=122)){
+				if (!(currline.charAt(i) >= 'A' &&  currline.charAt(i) <= 'Z')
+					&& !(currline.charAt(i)  >= 'a' && currline.charAt(i) <='z')){
 						ansstring += currline.charAt(i);
 						continue;
 					}
-				int shift = ((int)key.charAt(currkey)-64)%26;
+				int shift = (key.charAt(currkey)-'A'+1)%NUM_LETTERS;
 				char newchar;
 				if (encryptOrDecrypt == 1){
-					if ((int)currline.charAt(i)  >= 65 && 
-					(int)currline.charAt(i) <=90){
-						newchar = (char)(((int)currline.charAt(i)-65 + shift)%26 + 65);
+					if (currline.charAt(i)  >= 'A' && 
+					currline.charAt(i) <='Z'){
+						newchar = (char)((currline.charAt(i)-'A' + shift)%NUM_LETTERS + (int)'A');
 					}
 					else{
-						newchar = (char)(((int)currline.charAt(i)-97 + shift)%26 + 97);
+						newchar = (char)((currline.charAt(i)-'a' + shift)%NUM_LETTERS + (int)'a');
 					}
 				}
 				else{
-					if ((int)currline.charAt(i)  >= 65 && 
-					(int)currline.charAt(i) <=90){
-						newchar = (char)(((int)currline.charAt(i)-65-shift+26)%26 + 65);
+					if (currline.charAt(i)  >= 'A' && 
+					currline.charAt(i) <='Z'){
+						newchar = (char)((currline.charAt(i)-'A'-shift+NUM_LETTERS)%NUM_LETTERS + (int)'A');
 					}
 					else{
-						newchar = (char)(((int)currline.charAt(i)-97-shift+26)%26 + 97);
+						newchar = (char)((currline.charAt(i)-'a'-shift+NUM_LETTERS)%NUM_LETTERS + (int)'a');
 					}
 				}
 				currkey++;
