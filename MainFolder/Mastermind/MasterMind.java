@@ -35,6 +35,10 @@ public class MasterMind {
 			PegArray currGuess = getInput();
 			guesses[i] = currGuess;
 			printBoard();
+			if (currGuess.getExactMatches(master) == PEGS_IN_CODE){
+				System.out.println("You guessed the code in " + (i+1) + " tries");
+				break;
+			}
 		}
 	}
 	
@@ -154,8 +158,10 @@ public class MasterMind {
 		else
 			for (int p = 0; p < PEGS_IN_CODE; p++)
 				System.out.print("       |");
+				
 		System.out.printf("   %d      %d    |\n",
-							guesses[t].getExact(), guesses[t].getPartial());
+							guesses[t].getExactMatches(master), 
+							guesses[t].getPartialMatches(master));
 	}
 
 }
