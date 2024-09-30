@@ -64,7 +64,7 @@ public class PegArray {
 				used[i] = 1;
 			for (int j = 0; j < PEGS_IN_CODE; j++){
 				if (used[j] == 0 && master.getPeg(j).getLetter()
-					== pegs[j].getLetter()){
+					== pegs[i].getLetter()){
 					partialMatches++;
 					used[j] = 1;
 				}
