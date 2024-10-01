@@ -31,15 +31,29 @@ public class MasterMind {
 		for (int i = 0; i < MAX_GUESSES; i++){
 			guesses[i] = blankRow;
 		}
+		boolean found = false;
 		for (int i = 0; i < MAX_GUESSES; i++){
+			System.out.println("Guess " + (i+1));
 			PegArray currGuess = getInput();
 			guesses[i] = currGuess;
-			printBoard();
 			if (currGuess.getExactMatches(master) == PEGS_IN_CODE){
-				System.out.println("You guessed the code in " + (i+1) + " tries");
+				reveal = true;
+				printBoard();
+				System.out.println("Nice work! You found the master code in "
+					+ (i+1) + "guesses. ");
 				break;
 			}
+			if (i == MAX_GUESSES-1){
+				reveal = true;
+				printBoard();
+				System.out.println("Oops. You were unable to find the"
+					+" solution in 10 guesses. ");
+			}
+			else{
+				printBoard();
+			}
 		}
+		
 	}
 	
 	public void generateArray(){
