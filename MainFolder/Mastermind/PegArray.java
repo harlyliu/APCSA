@@ -58,15 +58,21 @@ public class PegArray {
 	 */
 	public int getPartialMatches(PegArray master) {
 		partialMatches = 0;
+		exactMatches = 0;
 		int[] used = new int[PEGS_IN_CODE];
 		for (int i = 0; i < PEGS_IN_CODE; i++){
-			if (master.getPeg(i).getLetter() == pegs[i].getLetter())
+			if (master.getPeg(i).getLetter() == pegs[i].getLetter()){
 				used[i] = 1;
+				exactMatches++;
+			}
+		}
+		for (int i = 0; i < PEGS_IN_CODE; i++){
 			for (int j = 0; j < PEGS_IN_CODE; j++){
 				if (used[j] == 0 && master.getPeg(j).getLetter()
 					== pegs[i].getLetter()){
 					partialMatches++;
 					used[j] = 1;
+					break;
 				}
 			}
 		}
