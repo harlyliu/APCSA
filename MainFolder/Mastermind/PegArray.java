@@ -29,17 +29,17 @@ public class MasterMind {
 	/**Runs the game and calls all other methods. 
 	 */
 	public void run(){
-		/*PegArray test1 = new PegArray(4);
+		PegArray test1 = new PegArray(4);
 		test1.getPeg(0).setLetter('D');
-		test1.getPeg(1).setLetter('C');
-		test1.getPeg(2).setLetter('C');
-		test1.getPeg(3).setLetter('F');
+		test1.getPeg(1).setLetter('A');
+		test1.getPeg(2).setLetter('E');
+		test1.getPeg(3).setLetter('D');
 		PegArray test2 = new PegArray(4);
-		test2.getPeg(0).setLetter('D');
-		test2.getPeg(1).setLetter('B');
-		test2.getPeg(2).setLetter('C');
-		test2.getPeg(3).setLetter('F');
-		System.out.println(test2.getPartialMatches(test1));*/
+		test2.getPeg(0).setLetter('A');
+		test2.getPeg(1).setLetter('D');
+		test2.getPeg(2).setLetter('D');
+		test2.getPeg(3).setLetter('E');
+		System.out.println(test2.getPartialMatches(test1));
 		printIntroduction();
 		generateArray();
 		guesses = new PegArray[MAX_GUESSES];
