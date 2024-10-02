@@ -1,13 +1,8 @@
 /**
  *	Plays the game of MasterMind.
- *	The game involves two players, a board, and pegs of six different colors.
- *  One person is designated the “code-maker” and the other the “codebreaker”.
- *  The code-maker secretly chooses a pattern of four pegs in which
- *  some or all can be duplicate colors, then places the pegs into an ordered
- *  row that is hidden from view. The code-breaker has up to ten guesses to
- *  determine the code and win; otherwise, the code-maker wins. 
- *	@author Harly Liu
- *	@since 10/2/2024
+ *	<Describe the game here>
+ *	@author
+ *	@since
  */
 
 public class MasterMind {
@@ -22,11 +17,17 @@ public class MasterMind {
 	private final int PEG_LETTERS = 6;		// Number of different letters on pegs
 											// 6 = A through F
 	
+	/**Just the main method
+	 * @param String[] args
+	 * @return none
+	 */
 	public static void main(String[] args){
 		MasterMind mm = new MasterMind();
 		mm.run();
 	}
 	
+	/**Runs the game and calls all other methods. 
+	 */
 	public void run(){
 		printIntroduction();
 		generateArray();
@@ -57,7 +58,8 @@ public class MasterMind {
 			else{
 				printBoard();
 			}
-		}	
+		}
+		
 	}
 	
 	public void generateArray(){
