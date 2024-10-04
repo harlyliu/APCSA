@@ -1,8 +1,13 @@
 /**
  *	Plays the game of MasterMind.
- *	<Describe the game here>
- *	@author
- *	@since
+ *	The game involves two players, a board, and pegs of six different colors.
+ *  One person is designated the codemaker and the other the codebreaker. 
+ *  The code-maker secretly chooses a pattern of four pegs in which
+ *  some or all can be duplicate colors, then places the pegs into an ordered
+ *  row that is hidden from view. The code-breaker has up to ten guesses to
+ *  determine the code and win; otherwise, the code-maker wins. 
+ *	@author Harly Liu
+ *	@since 10/4/2024
  */
 
 public class MasterMind {
@@ -27,10 +32,13 @@ public class MasterMind {
 	}
 	
 	/**Runs the game and calls all other methods. 
+	 * @param none
+	 * @return none
 	 */
 	public void run(){
 		printIntroduction();
 		generateArray();
+		Prompt.getString("Hit the Enter key to start the game ");
 		guesses = new PegArray[MAX_GUESSES];
 		PegArray blankRow = new PegArray(PEGS_IN_CODE);
 		for (int i = 0; i < PEGS_IN_CODE; i++) blankRow.getPeg(i).setLetter(' ');
@@ -62,6 +70,10 @@ public class MasterMind {
 		
 	}
 	
+	/**Creates the master key code using random
+	 * @param none
+	 * @return none
+	 */
 	public void generateArray(){
 		master = new PegArray(PEGS_IN_CODE);
 		for (int i = 0; i < PEGS_IN_CODE; i++){
@@ -70,6 +82,10 @@ public class MasterMind {
 		}
 	}
 	
+	/**Gets the input of correct size 
+	 * @param none
+	 * @return PegArray the user enters. 
+	 */
 	public PegArray getInput(){
 		String str = "";
 		do{
@@ -84,6 +100,10 @@ public class MasterMind {
 		return newArray;
 	}
 	
+	/**Checks if the user input is valid
+	 * @param String that the user entered
+	 * @return true if the string is valid, false if it isn't
+	 */
 	public boolean isValid(String str){
 		if (str.length() != PEGS_IN_CODE){
 			System.out.println("ERROR: Bad input, try again. ");
@@ -101,6 +121,8 @@ public class MasterMind {
 	
 	/**
 	 *	Print the introduction screen
+	 * @param none
+	 * @return none
 	 */
 	public void printIntroduction() {
 		System.out.println("\n");
@@ -132,6 +154,8 @@ public class MasterMind {
 	
 	/**
 	 *	Print the peg board to the screen
+	 * @param none
+	 * @return none
 	 */
 	public void printBoard() {
 		// Print header
@@ -166,6 +190,7 @@ public class MasterMind {
 	/**
 	 *	Print one guess line to screen
 	 *	@param t	the guess turn
+	 * @return none
 	 */
 	public void printGuess(int t) {
 		System.out.printf("|   %2d   |", (t + 1));
