@@ -53,8 +53,9 @@ public class Wordle
 	
 	private final int TOTAL_GUESSES = 12972;
 	private final int TOTAL_WORDS = 2309;
-	private String[] allowedStrings;
-	private String[] allowedGuesses;				
+	private String[] allowedWords;
+	private String[] allowedGuesses;	
+	private int[] greenAndYellows;			
 	
 	/** 
 	 *	Creates a Wordle object.  A constructor.  Initializes all of the variables by 
@@ -70,13 +71,22 @@ public class Wordle
 			show = true;
 		Scanner readerWords = FileUtils.openToRead(WORDS5);
 		Scanner readerGuesses = FileUtils.openToRead(WORDS5_ALLOWED);
-		allowedStrings = new String[TOTAL_WORDS];
+		allowedWords = new String[TOTAL_WORDS];
 		allowedGuesses = new String[TOTAL_GUESSES];
 		int i = 0;
 		while(readerWords.hasNext()){
-			
+			String str = readerWords.next();
+			allowedWords[i] = str;
+			i++;
+		}
+		i = 0;
+		while(readerGuesses.hasNext()){
+			String str = readerGuesses.next();
+			allowedGuesses[i] = str;
+			i++;
 		}
 		initAll(testWord);
+		
 	}
 	
 	/** 
@@ -98,6 +108,7 @@ public class Wordle
 		readyForMouseInput = false;
 		keyBoardColors = new int[29];
 		word = openFileAndChooseWord(WORDS5, testWord);		
+		greenAndYellows = new int[6];
 	}
 
 	/**
@@ -110,14 +121,11 @@ public class Wordle
 	{
 		String testWord = new String("");
 		String showIt = new String("");
-
 		// Determines if args[0] and args[1] are set
 		// args[0] is "show" which means to show the word chosen
 		// args[1] is a word which is used as the chosen word
-
-
-
-
+		if (args.length >= 1) showIt = args[0];
+		if (args.length == 2) testWord = args[1];
 		Wordle run = new Wordle(showIt, testWord);
 		run.setUpCanvas();
 		run.playGame();
@@ -146,6 +154,7 @@ public class Wordle
 	public void playGame ( )
 	{
 		boolean keepGoing = true;
+
 		while(keepGoing)
 		{
 			if(activeGame)
@@ -171,8 +180,11 @@ public class Wordle
 	public String openFileAndChooseWord(String inFileName, String testWord)
 	{
 		String result = "SMART";
-				
-		
+		if (inAllowedGuessesFile(testWord)) word = testWord;
+		else{
+			int key = (int)(Math.random()*TOTAL_WORDS);
+			result = allowedWords[key];
+		}
 		return result;
 	}
 
@@ -186,10 +198,18 @@ public class Wordle
 	 */
 	public boolean inAllowedWordFile(String possibleWord)
 	{
-		
+		for (int i = 0; i < allowedGuesses.length; i++){
+			if (allowedGuesses[i].equalsIgnoreCase(possibleWord)) return true;
+		}
 		return false;
 	}
 	
+	public boolean inAllowedGuessesFile(String possibleWord){
+		for(int i = 0; i < allowedWords.length; i++){
+			if (allowedWords[i].equalsIgnoreCase(possibleWord)) return true;
+		}
+		return false;
+	}
 	/** 
 	 *	Processes the guess made by the user.  This method will only be called if
 	 *	the field variable letters has length 5.  The guess in letters will need
@@ -202,21 +222,48 @@ public class Wordle
 	public void processGuess ( )
 	{
 		letters = letters.toUpperCase();
-		
+		System.out.println(letters);
 		// if guess is in words5allowed.txt then put into guess list
-		int guessNumber = 0;
-		for(int i = 0; i < wordGuess.length; i++)
-		{
-			if(wordGuess[i].length() == 5)
+		if (inAllowedGuessesFile(letters)){
+			int guessNumber = 0;
+			for(int i = 0; i < wordGuess.length; i++)
 			{
-				guessNumber = i + 1;
+				if(wordGuess[i].length() == 5)
+				{
+					guessNumber = i + 1;
+				}
+			}
+			wordGuess[guessNumber] = letters.toUpperCase();
+			greenAndYellows = checkGreenAndYellows();
+			letters = "";
+		}
+		else{
+		// else if guess is not in words5allowed.txt then print dialog box
+		}
+	}
+	
+	public int[] checkGreenAndYellows(){
+		int[] ans = new int[5];
+		int[] used = new int[5];
+		for (int i = 0; i < 5; i++){
+			if (letters.charAt(i) == word.charAt(i)){
+				used[i] = 1;
+				ans[i] = 2;
 			}
 		}
-		wordGuess[guessNumber] = letters.toUpperCase();
-		letters = "";
-		
-		// else if guess is not in words5allowed.txt then print dialog box
-
+		for (int i = 0; i < 5; i++){
+			if (ans[i] != 2){
+				for (int j = 0; j < 5; j++){
+					if (ans[i] == 0 && used[j] == 0 && word.charAt(j)
+						== letters.charAt(i)){
+						used[j] = 1;
+						ans[i] = 1;
+						j = 7;
+					}
+				}
+			}
+		}
+		return ans;
 	}
 	
 	/** 
@@ -236,7 +283,7 @@ public class Wordle
 
 
 
-		
+		if (letters.length() == 5) processGuess();
 		for(int row = 0; row < 6; row++)
 		{
 			for(int col = 0; col < 5; col++)
