@@ -207,7 +207,6 @@ public class Wordle
 	}
 	
 	public boolean inAllowedGuessesFile(String possibleWord){
-		System.out.println(allowedGuesses[3134]);
 		for(int i = 0; i < allowedGuesses.length; i++){
 			if (allowedGuesses[i].equalsIgnoreCase(possibleWord)) return true;
 		}
@@ -227,7 +226,6 @@ public class Wordle
 		letters = letters.toUpperCase();
 		if (letters.length() == 5){
 			if (inAllowedGuessesFile(letters)){
-				System.out.println("stored");
 				int guessNumber = 0;
 				for(int i = 0; i < wordGuess.length; i++)
 				{
@@ -240,7 +238,7 @@ public class Wordle
 				letters = "";
 			}
 			else{
-			// else if guess is not in words5allowed.txt then print dialog box
+				JOptionPane pane = new JOptionPane(letters + " is not a word!");
 			}
 		}
 	}
@@ -278,13 +276,6 @@ public class Wordle
 	public void drawPanel ( )
 	{
 		StdDraw.clear(StdDraw.WHITE);
-		
-		// Determine color of guessed letters and draw backgrounds
-	 	// 0 for not checked yet, 1 for no match, 2 for partial, 3 for exact
-		// draw guessed letter backgrounds
-
-
-
 		if (letters.length() == 5) processGuess();
 		for(int row = 0; row < 6; row++)
 		{
@@ -301,6 +292,7 @@ public class Wordle
 			}
 		}
 				  // Determine color of guessed letters and draw backgrounds
+		int[] alphabet = new int[26];
 		for (int row = 0; row < 6; row++) {
 			for (int col = 0; col < 5; col++) {
 				if (wordGuess[row].length() >= 5){
@@ -308,25 +300,25 @@ public class Wordle
 					String imageName;
 					switch (colorIndex) {
 						case 0:
+						
+						  if (alphabet[(int)wordGuess[row].charAt(col)-65] <=1)
+							alphabet[(int)wordGuess[row].charAt(col)-65] = 1;
 						  imageName = "letterFrameDarkGray.png";
 						  break;
 						case 1:
-						  imageName = "letterFrameYellow.png"; // Adjust image name for yellow
+						  if (alphabet[(int)wordGuess[row].charAt(col)-65] <=2)
+							alphabet[(int)wordGuess[row].charAt(col)-65] = 2;
+						  imageName = "letterFrameYellow.png";
 						  break;
 						case 2:
-						  imageName = "letterFrameGreen.png";  // Adjust image name for green
+						  alphabet[(int)wordGuess[row].charAt(col)-65] = 3;
+						  imageName = "letterFrameGreen.png";
 						  break;
 						default:
 						  imageName = "letterFrameDarkGray.png";
 					  }
 
 				  StdDraw.picture(209 + col * 68, 650 - row * 68, imageName);
-			  }
-
-			  // Draw letter if available 
-			  if (wordGuess[row].length()>col) {
-				StdDraw.setPenColor(StdDraw.BLACK);
-				StdDraw.text(209 + col * 68, 650 - row * 68, wordGuess[row].substring(col, col+1));
 			  }
 			}
 		  }
@@ -350,7 +342,23 @@ public class Wordle
 			//  so that the correct colors show up.
 			else
 			{
-				StdDraw.picture(pair[0], pair[1], "keyBackground.png");
+					int colorIndex = alphabet[(int)Constants.KEYBOARD[place].charAt(0)-65];
+					String imageName;
+					switch (colorIndex) {
+						case 1:
+						  imageName = "keyBackgroundDarkGray.png";
+						  break;
+						case 2:
+						  imageName = "keyBackgroundYellow.png";
+						  break;
+						case 3:
+						  imageName = "keyBackgroundGreen.png";
+						  break;
+						default:
+						  imageName = "keyBackground.png";
+					  }
+
+				StdDraw.picture(pair[0], pair[1], imageName);
 			}
 			StdDraw.setPenColor(StdDraw.BLACK);
 			StdDraw.text(pair[0], pair[1], Constants.KEYBOARD[place]);
