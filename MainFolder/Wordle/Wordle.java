@@ -67,6 +67,7 @@ public class Wordle
 	public Wordle(String showIt, String testWord)
 	{
 		show = false;
+		testWord = testWord.toUpperCase();
 		if (showIt.equalsIgnoreCase("show"))
 			show = true;
 		Scanner readerWords = FileUtils.openToRead(WORDS5);
@@ -109,7 +110,7 @@ public class Wordle
 		keyBoardColors = new int[29];
 		word = openFileAndChooseWord(WORDS5, testWord);		
 		word = word.toUpperCase();
-		System.out.println(word);
+		if (show) System.out.println(word);
 		greenAndYellows = new int[6];
 	}
 
@@ -181,7 +182,7 @@ public class Wordle
 	 */
 	public String openFileAndChooseWord(String inFileName, String testWord)
 	{
-		String result = "SMART";
+		String result = testWord;
 		if (inAllowedGuessesFile(testWord)) word = testWord;
 		else{
 			int key = (int)(Math.random()*TOTAL_WORDS);
@@ -276,7 +277,6 @@ public class Wordle
 	public void drawPanel ( )
 	{
 		StdDraw.clear(StdDraw.WHITE);
-		if (letters.length() == 5) processGuess();
 		for(int row = 0; row < 6; row++)
 		{
 			for(int col = 0; col < 5; col++)
