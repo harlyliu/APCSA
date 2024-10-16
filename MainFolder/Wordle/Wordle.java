@@ -240,6 +240,9 @@ public class Wordle
 			}
 			else{
 				JOptionPane pane = new JOptionPane(letters + " is not a word!");
+				JDialog d = pane.createDialog(null, "INVALID GUESS");
+				d.setLocation(365,250);
+				d.setVisible(true);
 			}
 		}
 	}
