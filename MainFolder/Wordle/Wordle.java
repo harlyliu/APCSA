@@ -51,11 +51,26 @@ public class Wordle
 	 */
 	private int [] keyBoardColors;		
 	
+	//Total amount of guesses
+	private final int GUESSES_AMT = 6;
+	
+	//Total valid guesses in the file
 	private final int TOTAL_GUESSES = 12972;
+	
+	//total valid answers in the file
 	private final int TOTAL_WORDS = 2309;
+	
+	//array of all valid answers
 	private String[] allowedWords;
-	private String[] allowedGuesses;	
+	
+	//aray of all valid guesses
+	private String[] allowedGuesses;
+		
+	//array for holding green and yellows for the guess
 	private int[] greenAndYellows;			
+	
+	//letters in a guess
+	private int TOTAL_CHARS = 5;
 	
 	/** 
 	 *	Creates a Wordle object.  A constructor.  Initializes all of the variables by 
@@ -178,7 +193,6 @@ public class Wordle
 	 *	@param testWord			if this String is found in words5allowed.txt, it
 	 *							will be used to set word.
 	 *	@return					the word chosen as the "goal word".
-	 *	THIS METHOD IS INCOMPLETE.
 	 */
 	public String openFileAndChooseWord(String inFileName, String testWord)
 	{
@@ -197,7 +211,6 @@ public class Wordle
 	 *	Returns true if the word is in the file, false otherwise.
 	 *	@param possibleWord       the word to looked for in words5allowed.txt
 	 *	@return                   true if the word is in the text file, false otherwise
-	 *	THIS METHOD IS INCOMPLETE.
 	 */
 	public boolean inAllowedWordFile(String possibleWord)
 	{
@@ -207,6 +220,13 @@ public class Wordle
 		return false;
 	}
 	
+	/** 
+	 *	Checks to see if the word in the parameter list is found in the text file
+	 *	words5.txt
+	 *	Returns true if the word is in the file, false otherwise.
+	 *	@param possibleWord       the word to looked for in words5.txt
+	 *	@return                   true if the word is in the text file, false otherwise
+	 */
 	public boolean inAllowedGuessesFile(String possibleWord){
 		for(int i = 0; i < allowedGuesses.length; i++){
 			if (allowedGuesses[i].equalsIgnoreCase(possibleWord)) return true;
@@ -220,7 +240,8 @@ public class Wordle
 	 *	inAllowedWordFile will be called for this task.  If the guess in letters
 	 *	does not exist in the text file, a message is displayed to the user in the
 	 *	form of a JOptionPane with JDialog.
-	 *	THIS METHOD IS INCOMPLETE.
+	 * @param none
+	 * @return none
 	 */
 	public void processGuess ( )
 	{
@@ -246,19 +267,23 @@ public class Wordle
 			}
 		}
 	}
-	
+		/** 
+	 *	Coutns the amount of yellows and greens
+	 *	@param string of the guess
+	 *	@return  array containing 0 for nothing, 1 for yellow, and 2 for green
+	 */
 	public int[] checkGreenAndYellows(String guess){
-		int[] ans = new int[5];
-		int[] used = new int[5];
-		for (int i = 0; i < 5; i++){
+		int[] ans = new int[TOTAL_CHARS];
+		int[] used = new int[TOTAL_CHARS];
+		for (int i = 0; i < TOTAL_CHARS; i++){
 			if (guess.charAt(i) == word.charAt(i)){
 				used[i] = 1;
 				ans[i] = 2;
 			}
 		}
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < TOTAL_CHARS; i++){
 			if (ans[i] != 2){
-				for (int j = 0; j < 5; j++){
+				for (int j = 0; j < TOTAL_CHARS; j++){
 					if (ans[i] == 0 && used[j] == 0 && word.charAt(j)
 						== guess.charAt(i)){
 						used[j] = 1;
@@ -275,14 +300,15 @@ public class Wordle
 	 *	Draws the entire game panel.  This includes the guessed words, the current
 	 *	word being guessed, and all of the letters in the "keyboard" at the bottom
 	 *	of the gameboard.  The correct colors will need to be chosen for every letter.
-	 *	THIS METHOD IS INCOMPLETE.
+	 * @param none
+	 * @return none
 	 */
 	public void drawPanel ( )
 	{
 		StdDraw.clear(StdDraw.WHITE);
-		for(int row = 0; row < 6; row++)
+		for(int row = 0; row < GUESSES_AMT; row++)
 		{
-			for(int col = 0; col < 5; col++)
+			for(int col = 0; col < TOTAL_CHARS; col++)
 			{
 				if(wordGuess[row].length() != 0)											//  THIS METHOD IS INCOMPLETE.
 				{
@@ -295,10 +321,10 @@ public class Wordle
 			}
 		}
 				  // Determine color of guessed letters and draw backgrounds
-		int[] alphabet = new int[26];
-		for (int row = 0; row < 6; row++) {
-			for (int col = 0; col < 5; col++) {
-				if (wordGuess[row].length() >= 5){
+		int[] alphabet = new int['Z'-'A'+1];
+		for (int row = 0; row < GUESSES_AMT; row++) {
+			for (int col = 0; col < TOTAL_CHARS; col++) {
+				if (wordGuess[row].length() >= TOTAL_CHARS){
 					int colorIndex = checkGreenAndYellows(wordGuess[row])[col];
 					String imageName;
 					switch (colorIndex) {
@@ -419,10 +445,12 @@ public class Wordle
 	public void checkIfWonOrLost ( )
 	{
 		String lastWord = "";
+		int filledIn = 0;
 		for(int i = 0; i < wordGuess.length; i++)
 		{
 			if(wordGuess[i].length() == 5)
 			{
+				filledIn = i;
 				lastWord = wordGuess[i];
 			}
 		}
@@ -433,6 +461,13 @@ public class Wordle
 			activeGame = false;
 			JOptionPane pane = new JOptionPane(lastWord + " is the word!  Press RESET to begin again");
 			JDialog d = pane.createDialog(null, "CONGRATULATIONS!");
+			d.setLocation(365,250);
+			d.setVisible(true);
+		}
+		else if (filledIn == 5){
+			activeGame = false;
+			JOptionPane pane = new JOptionPane(word + " was the word  Press RESET to begin again");
+			JDialog d = pane.createDialog(null, "GAME OVER");
 			d.setLocation(365,250);
 			d.setVisible(true);
 		}
