@@ -50,7 +50,8 @@ public class Yahtzee{
 				+ "spaces. For examples, if you'd like to 'hold' die 1, "
 				+ "2, and 5, enter 125 (enter -1 if you'd like to end the turn)"); 
 			}while(!inp.equals("-1"));
-			
+			int val = Prompt.getInt(player1.getName+ ", now you need to "
+				+"make a choice. Pick a valid integer from the list above (1 - 13)");
 		}
 		
 	}
