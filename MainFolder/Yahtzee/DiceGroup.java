@@ -44,7 +44,7 @@ public class DiceGroup {
 	}
 	
 	/**	getters - you complete */
-	public Dice getDice(int i) return die[i];
+	public Dice getDice(int i){ return die[i];}
 	
 	/**	@return the total value of the DiceGroup - you complete */
 	public int getTotal() {
