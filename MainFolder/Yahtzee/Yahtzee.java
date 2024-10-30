@@ -25,12 +25,12 @@ public class Yahtzee{
 		int first = determineOrder();
 		for (int i = 0; i < TOTAL_TURNS; i++){
 			if (first == 1){
-				runPlayerTurn(player1);
-				runPlayerTurn(player2);
+				runPlayerTurn(1);
+				runPlayerTurn(2);
 			}
 			else{
-				runPlayerTurn(player2);
-				runPlayerTurn(player1);
+				runPlayerTurn(2);
+				runPlayerTurn(1);
 			}
 			player1.getScoreCard().printCardHeader();
 			player1.getScoreCard().printPlayerScore();
@@ -41,17 +41,34 @@ public class Yahtzee{
 	public void runPlayerTurn(int player){
 		String inp;
 		if (player == 1){
-			do{
-				Prompt.getString(player1.getName + " , it's your turn to play. Please hit enter to roll the dice");
+			for (int i = 0; i < 2; i++){
+				Prompt.getString(player1.getName() + " , it's your turn to play. Please hit enter to roll the dice");
 				DiceGroup1.rollDice();
 				DiceGroup1.printDice();
 				inp = Prompt.getString("Which di(c)e would you like to keep? "
 				+"Enter the values you'd like to 'hold' without"
 				+ "spaces. For examples, if you'd like to 'hold' die 1, "
 				+ "2, and 5, enter 125 (enter -1 if you'd like to end the turn)"); 
-			}while(!inp.equals("-1"));
-			int val = Prompt.getInt(player1.getName+ ", now you need to "
+				if (inp.equals("-1"))i = 4;
+			}
+			int val = Prompt.getInt(player1.getName()+ ", now you need to "
 				+"make a choice. Pick a valid integer from the list above (1 - 13)");
+			diceGroup1.changeScore(val);
+		}
+		else{
+			for (int i = 0; i < 2; i++){
+				Prompt.getString(player2.getName() + " , it's your turn to play. Please hit enter to roll the dice");
+				DiceGroup2.rollDice();
+				DiceGroup2.printDice();
+				inp = Prompt.getString("Which di(c)e would you like to keep? "
+				+"Enter the values you'd like to 'hold' without"
+				+ "spaces. For examples, if you'd like to 'hold' die 1, "
+				+ "2, and 5, enter 125 (enter -1 if you'd like to end the turn)"); 
+				if (inp.equals("-1"))i = 4;
+			}
+			int val = Prompt.getInt(player2.getName()+ ", now you need to "
+				+"make a choice. Pick a valid integer from the list above (1 - 13)");
+			diceGroup2.changeScore(val);
 		}
 		
 	}
