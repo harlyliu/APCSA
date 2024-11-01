@@ -1,60 +1,76 @@
+/**
+ *  Creates an array of dice that can be thrown and kept
+ *
+ *  @author Harly Liu
+ *  @since 10/31/24
+ */
+
+
 public class DiceGroup {
-	
+
 	private Dice [] die;	// the array of dice
-	
+
 	private final int NUM_DICE = 5;	// number of dice
-	
+
+
 	// Create the seven different line images of a die
 	private String [] line = {	" _______ ",
-								"|       |",
-								"| O   O |",
-								"|   O   |",
-								"|     O |",
-								"| O     |",
-								"|_______|" };
-	
+			"|       |",
+			"| O   O |",
+			"|   O   |",
+			"|     O |",
+			"| O     |",
+			"|_______|" };
+
 	/*	you complete */
-	public DiceGroup() { 
-		die = new Dice[6];
-		for (int i = 0; i < NUM_DIEC; i++){
+	public DiceGroup() {
+		die = new Dice[NUM_DICE];
+		for (int i = 0; i < NUM_DICE; i++){
 			die[i] = new Dice();
 		}
 	}
-	
-	/**	you complete */
-	public void rollDice() { 
+
+	/**	Rolls all of the dice
+	 * @param none
+	 * @return none
+	 */
+	public void rollDice() {
 		for (int i = 0;i < NUM_DICE; i++)die[i].roll();
 	}
-	
+
 	/**	Hold the dice in the rawHold and roll the rest.
 	 *	For example: If rawHold is "421", then hold die 1, 2, and 4, and
 	 *	roll 3 and 5.
 	 *	@param rawHold		the string of dice to hold
 	 *
-	 *	you complete
+	 *	
 	 */
 	public void rollDice(String rawHold) {
 		for (int i = 0; i < NUM_DICE; i++){
 			boolean valid = true;
 			for (int j = 0; j < rawHold.length(); j++){
-				if (Integer.parseInt(rawHold.charAt(j))-1 == i) valid = false;
+				if (Integer.parseInt(rawHold.charAt(j) + "")-1 == i) valid = false;
 			}
 			if (valid) die[i].roll();
 		}
 	}
-	
-	/**	getters - you complete */
+
+	/**	Returns a specific dice
+	 * @param index of dice
+	 * @return Dice object
+	 */
 	public Dice getDice(int i){ return die[i];}
-	
-	/**	@return the total value of the DiceGroup - you complete */
+
+	/**Add up all of the values	
+	* @return the total value of the DiceGroup */
 	public int getTotal() {
 		int ans = 0;
-		for (int i = 0; i < numDice; i++){
-			ans += numDice[i].getValue();
+		for (int i = 0; i < NUM_DICE; i++){
+			ans += die[i].getValue();
 		}
 		return ans;
 	}
-	
+
 	/**
 	 *  Prints out the images of the dice
 	 */
@@ -62,7 +78,7 @@ public class DiceGroup {
 		printDiceHeaders();
 		for (int i = 0; i < 6; i++) {
 			System.out.print(" ");
-			for (int j = 0; j < die.length; j++) {
+			for (int j = 0; j < NUM_DICE; j++) {
 				printDiceLine(die[j].getValue() + 6 * i);
 				System.out.print("     ");
 			}
@@ -70,7 +86,7 @@ public class DiceGroup {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 *  Prints the first line of the dice.
 	 */
@@ -81,7 +97,7 @@ public class DiceGroup {
 		}
 		System.out.println();
 	}
-	
+
 	/**
 	 *  Prints one line of the ASCII image of the dice.
 	 *
@@ -90,7 +106,7 @@ public class DiceGroup {
 	private void printDiceLine(int value) {
 		System.out.print(line[getDiceLine(value)]);
 	}
-	
+
 	/**
 	 *  Gets the index number into the ASCII image of the dice.
 	 *
