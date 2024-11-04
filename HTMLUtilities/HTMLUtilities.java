@@ -17,7 +17,37 @@ public class HTMLUtilities {
 	public String[] tokenizeHTMLString(String str) {
 		// make the size of the array large to start
 		String[] result = new String[10000];
-		
+		int curr = 0;
+		int currType = 0;//1 for string, 2 for number, 3 for punctuation
+		String currStr = "";
+		for (int i = 0; i < str.length(); i++){
+			char currChar = str.charAt(i);
+			if (currChar == ' '){
+				result[curr] = currStr;
+				currType = 0;
+				curr++;
+				currStr = "";
+			}
+			else if (currType == 0){
+				if (isLetter(currChar)){
+					currType = 1;
+					currStr += currChar;
+				}
+				else if (isDigit(currChar)|| i < str.length()-1 && currChar == '-' && isDigit(str.charAt(i+1))){
+					currType = 2;
+					currStr += currChar;
+				}
+				else{
+					currType = 3;
+				}
+			}
+			else if (currType == 1){
+			}
+			else if (currType == 2){
+			}
+			else{
+			}
+		}
 		// return the correctly sized array
 		return result;
 	}
