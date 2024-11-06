@@ -15,6 +15,8 @@ public class HTMLUtilities {
 	 *	@return				the String array of tokens
 	 */
 	public String[] tokenizeHTMLString(String str) {
+		System.out.println("\n\n\nTokenize called");
+		System.out.println(str);
 		// make the size of the array large to start
 		String[] result = new String[10000];
 		int curr = 0;
@@ -29,27 +31,79 @@ public class HTMLUtilities {
 				currStr = "";
 			}
 			else if (currType == 0){
-				if (isLetter(currChar)){
+				if (currChar == '<'){
+					currStr += str.substring(i, str.indexOf(">")+1);
+					System.out.println(currStr);
+					i = str.indexOf(">");
+					if (currStr.charAt(currStr.length()-1) != '>'){
+						currStr += '>';
+					}
+					result[curr] = currStr;
+					curr++;
+					currStr = "";
+				}
+				else if (Character.isLetter(currChar)){
 					currType = 1;
 					currStr += currChar;
 				}
-				else if (isDigit(currChar)|| i < str.length()-1 && currChar == '-' && isDigit(str.charAt(i+1))){
+				else if (Character.isDigit(currChar)|| i < str.length()-1 && currChar == '-' && Character.isDigit(str.charAt(i+1))){
 					currType = 2;
 					currStr += currChar;
 				}
 				else{
 					currType = 3;
+					currStr += currChar;
 				}
 			}
 			else if (currType == 1){
+				if (Character.isLetter(currChar)||currChar == '-' && Character.isLetter(str.charAt(i+1))){
+					currStr += currChar;
+				}
+				else if (Character.isDigit(currChar)|| currChar == '-' && Character.isDigit(str.charAt(i+1))){
+					currType = 2;
+					result[curr] = currStr;
+					curr++;
+					currStr = "" + currChar;
+				}
+				else{
+					currType = 3;
+					result[curr] = currStr;
+					curr++;
+					currStr = "" + currChar;
+				}
 			}
 			else if (currType == 2){
+				if (Character.isDigit(currChar)){
+					currStr += currChar;
+				}
+				else if(currChar == '-' && Character.isDigit(str.charAt(i+1))){
+					result[curr] = currStr;
+					curr++;
+					currStr += currChar;
+				}
+				else if (Character.isLetter(currChar)){
+					currType = 1;
+					result[curr] = currStr;
+					curr++;
+					currStr = "" + currChar;
+				}
+				else{
+					currType = 3;
+					result[curr] = currStr;
+					curr++;
+					currStr = "" + currChar;
+				}
 			}
 			else{
+				result[curr] = currStr;
+				curr++;
+				currType = 0;
+				currStr = "" + currChar;
 			}
 		}
-		// return the correctly sized array
-		return result;
+		String[] ans = new String[curr];
+		for (int i = 0; i < curr; i++)ans[i] = result[i];
+		return ans;
 	}
 	
 	/**
