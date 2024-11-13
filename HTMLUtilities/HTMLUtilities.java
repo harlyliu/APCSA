@@ -26,13 +26,16 @@ public class HTMLUtilities {
 		boolean inTag = false;
 		if (str.equals("<pre>")){
 			state = TokenState.PREFORMAT;
+			count++;
 			tokens[0] = str;
 		}
 		else if (state == TokenState.PREFORMAT && str.equals("</pre>")){
 			state = TokenState.NONE;
+			count++;
 			tokens[0] = str;
 		}
 		else if (state == TokenState.PREFORMAT){
+			count++;
 			tokens[0] = str;
 		}
 		
