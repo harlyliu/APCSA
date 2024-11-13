@@ -50,7 +50,6 @@ public class HTMLUtilities {
 		        }
 		    }
 		    else if (Character.isDigit(c) || c == '.') {
-		        // Handle digits and decimal points
 		        if (currentToken.length() > 0 && 
 		            !Character.isDigit(currentToken.charAt(currentToken.length() - 1)) &&
 		            currentToken.charAt(currentToken.length() - 1) != '.' &&
@@ -63,24 +62,22 @@ public class HTMLUtilities {
 		    else if (c == '-') {
 		        if (currentToken.length() == 0 || 
 		            (!Character.isDigit(currentToken.charAt(0)) && !Character.isLetter(currentToken.charAt(0)))) {
-		            // Treat as a negative sign if at the start or not following a letter/number
 		            currentToken.append(c);
-		        } else if (currentToken.length() > 0 && Character.isLetter(currentToken.charAt(currentToken.length() - 1))) {
-		            // Treat as part of a number if it follows a letter (e.g., "hello-1.1")
+		        }
+			else if (currentToken.length() > 0 && Character.isLetter(currentToken.charAt(currentToken.length() - 1))) {
 		            tokens[tokenCount++] = currentToken.toString();
 		            currentToken.setLength(0);
 		            currentToken.append(c);
-		        } else {
-		            // Treat as a hyphen in a word or punctuation
+		        }
+			else {
 		            if (currentToken.length() > 0) {
 		                tokens[tokenCount++] = currentToken.toString();
 		                currentToken.setLength(0);
 		            }
-		            tokens[tokenCount++] = String.valueOf(c); // Treat the hyphen as a separate token
+		            tokens[tokenCount++] = String.valueOf(c);
 		        }
 		    }
 		    else if (Character.isLetter(c)) {
-		        // Handle letters
 		        if (currentToken.length() > 0 && 
 		            (!Character.isLetter(currentToken.charAt(0)) && currentToken.charAt(0) != '-' && !Character.isDigit(currentToken.charAt(0)))) {
 		            tokens[tokenCount++] = currentToken.toString();
@@ -89,7 +86,6 @@ public class HTMLUtilities {
 		        currentToken.append(c);
 		    }
 		    else {
-		        // Handle other characters as separate tokens
 		        if (currentToken.length() > 0) {
 		            tokens[tokenCount++] = currentToken.toString();
 		            currentToken.setLength(0);
