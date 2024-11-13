@@ -16,89 +16,89 @@ public class HTMLUtilities {
 	 */
 	public String[] tokenizeHTMLString(String str) {
 		String[] tokens = new String[str.length()];
-		int tokenCount = 0;
+		int count = 0;
 		
-		StringBuilder currentToken = new StringBuilder();
+		String currStr = new String();
 		boolean inTag = false;
 		
 		for (int i = 0; i < str.length(); i++) {
 		    char c = str.charAt(i);
 		
 		    if (c == '<') {
-		        if (currentToken.length() > 0) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		        if (currStr.length() > 0) {
+		            tokens[count++] = currStr.toString();
+		            currStr = "";
 		        }
 		        inTag = true;
-		        currentToken.append(c);
+		        currStr += c;
 		    }
 		    else if (c == '>') {
 		        if (inTag) {
-		            currentToken.append(c);
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		            currStr += c;
+		            tokens[count++] = currStr;
+		            currStr = "";
 		            inTag = false;
 		        }
 		    }
 		    else if (inTag) {
-		        currentToken.append(c);
+		        currStr += c;
 		    }
 		    else if (Character.isWhitespace(c)) {
-		        if (currentToken.length() > 0) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		        if (currStr.length() > 0) {
+		            tokens[count++] = currStr.toString();
+		            currStr = "";
 		        }
 		    }
 		    else if (Character.isDigit(c) || c == '.') {
-		        if (currentToken.length() > 0 && 
-		            !Character.isDigit(currentToken.charAt(currentToken.length() - 1)) &&
-		            currentToken.charAt(currentToken.length() - 1) != '.' &&
-		            !(currentToken.length() == 1 && currentToken.charAt(0) == '-')) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		        if (currStr.length() > 0 && 
+		            !Character.isDigit(currStr.charAt(currStr.length() - 1)) &&
+		            currStr.charAt(currStr.length() - 1) != '.' &&
+		            !(currStr.length() == 1 && currStr.charAt(0) == '-')) {
+		            tokens[count++] = currStr;
+		            currStr = "";
 		        }
-		        currentToken.append(c);
+		        currStr += c;
 		    }
 		    else if (c == '-') {
-		        if (currentToken.length() == 0 || 
-		            (!Character.isDigit(currentToken.charAt(0)) && !Character.isLetter(currentToken.charAt(0)))) {
-		            currentToken.append(c);
+		        if (currStr.length() == 0 || 
+		            (!Character.isDigit(currStr.charAt(0)) && !Character.isLetter(currStr.charAt(0)))) {
+		            currStr += c;
 		        }
-			else if (currentToken.length() > 0 && Character.isLetter(currentToken.charAt(currentToken.length() - 1))) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
-		            currentToken.append(c);
-		        }
-			else {
-		            if (currentToken.length() > 0) {
-		                tokens[tokenCount++] = currentToken.toString();
-		                currentToken.setLength(0);
+				else if (currStr.length() > 0 && Character.isLetter(currStr.charAt(currStr.length() - 1))) {
+						tokens[count++] = currStr.toString();
+						currStr = "";
+						currStr += c;
+					}
+				else {
+		            if (currStr.length() > 0) {
+		                tokens[count++] = currStr.toString();
+		                currStr = "";
 		            }
-		            tokens[tokenCount++] = String.valueOf(c);
+		            tokens[count++] = "" + c;
 		        }
 		    }
 		    else if (Character.isLetter(c)) {
-		        if (currentToken.length() > 0 && 
-		            (!Character.isLetter(currentToken.charAt(0)) && currentToken.charAt(0) != '-' && !Character.isDigit(currentToken.charAt(0)))) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		        if (currStr.length() > 0 && 
+		            (!Character.isLetter(currStr.charAt(0)) && currStr.charAt(0) != '-' && !Character.isDigit(currStr.charAt(0)))) {
+		            tokens[count++] = currStr;
+		            currStr = "";
 		        }
-		        currentToken.append(c);
+		        currStr += c;
 		    }
 		    else {
-		        if (currentToken.length() > 0) {
-		            tokens[tokenCount++] = currentToken.toString();
-		            currentToken.setLength(0);
+		        if (currStr.length() > 0) {
+		            tokens[count++] = currStr;
+		            currStr = "";
 		        }
-		        tokens[tokenCount++] = String.valueOf(c);
+		        tokens[count++] = ""+c;
 		    }
 		}
-		if (currentToken.length() > 0) {
-		    tokens[tokenCount++] = currentToken.toString();
+		if (currStr.length() > 0) {
+		    tokens[count++] = currStr;
 		}
 		
-		String[] ans = new String[tokenCount];
-		for (int i = 0; i < tokenCount; i++) ans[i] = tokens[i];
+		String[] ans = new String[count];
+		for (int i = 0; i < count; i++) ans[i] = tokens[i];
 		return ans;
 
 	}
