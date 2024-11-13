@@ -15,95 +15,96 @@ public class HTMLUtilities {
 	 *	@return				the String array of tokens
 	 */
 	public String[] tokenizeHTMLString(String str) {
-		System.out.println("\n\n\nTokenize called");
-		System.out.println(str);
-		// make the size of the array large to start
-		String[] result = new String[10000];
-		int curr = 0;
-		int currType = 0;//1 for string, 2 for number, 3 for punctuation
-		String currStr = "";
-		for (int i = 0; i < str.length(); i++){
-			char currChar = str.charAt(i);
-			if (currChar == ' '){
-				result[curr] = currStr;
-				currType = 0;
-				curr++;
-				currStr = "";
-			}
-			else if (currType == 0){
-				if (currChar == '<'){
-					currStr += str.substring(i, str.indexOf(">")+1);
-					System.out.println(currStr);
-					i = str.indexOf(">");
-					if (currStr.charAt(currStr.length()-1) != '>'){
-						currStr += '>';
-					}
-					result[curr] = currStr;
-					curr++;
-					currStr = "";
-				}
-				else if (Character.isLetter(currChar)){
-					currType = 1;
-					currStr += currChar;
-				}
-				else if (Character.isDigit(currChar)|| i < str.length()-1 && currChar == '-' && Character.isDigit(str.charAt(i+1))){
-					currType = 2;
-					currStr += currChar;
-				}
-				else{
-					currType = 3;
-					currStr += currChar;
-				}
-			}
-			else if (currType == 1){
-				if (Character.isLetter(currChar)||currChar == '-' && Character.isLetter(str.charAt(i+1))){
-					currStr += currChar;
-				}
-				else if (Character.isDigit(currChar)|| currChar == '-' && Character.isDigit(str.charAt(i+1))){
-					currType = 2;
-					result[curr] = currStr;
-					curr++;
-					currStr = "" + currChar;
-				}
-				else{
-					currType = 3;
-					result[curr] = currStr;
-					curr++;
-					currStr = "" + currChar;
-				}
-			}
-			else if (currType == 2){
-				if (Character.isDigit(currChar)){
-					currStr += currChar;
-				}
-				else if(currChar == '-' && Character.isDigit(str.charAt(i+1))){
-					result[curr] = currStr;
-					curr++;
-					currStr += currChar;
-				}
-				else if (Character.isLetter(currChar)){
-					currType = 1;
-					result[curr] = currStr;
-					curr++;
-					currStr = "" + currChar;
-				}
-				else{
-					currType = 3;
-					result[curr] = currStr;
-					curr++;
-					currStr = "" + currChar;
-				}
-			}
-			else{
-				result[curr] = currStr;
-				curr++;
-				currType = 0;
-				currStr = "" + currChar;
-			}
+		String[] tokens = new String[str.length()];
+		int tokenCount = 0;
+		
+		StringBuilder currentToken = new StringBuilder();
+		boolean inTag = false;
+		
+		for (int i = 0; i < str.length(); i++) {
+		    char c = str.charAt(i);
+		
+		    if (c == '<') {
+		        if (currentToken.length() > 0) {
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		        }
+		        inTag = true;
+		        currentToken.append(c);
+		    }
+		    else if (c == '>') {
+		        if (inTag) {
+		            currentToken.append(c);
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		            inTag = false;
+		        }
+		    }
+		    else if (inTag) {
+		        currentToken.append(c);
+		    }
+		    else if (Character.isWhitespace(c)) {
+		        if (currentToken.length() > 0) {
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		        }
+		    }
+		    else if (Character.isDigit(c) || c == '.') {
+		        // Handle digits and decimal points
+		        if (currentToken.length() > 0 && 
+		            !Character.isDigit(currentToken.charAt(currentToken.length() - 1)) &&
+		            currentToken.charAt(currentToken.length() - 1) != '.' &&
+		            !(currentToken.length() == 1 && currentToken.charAt(0) == '-')) {
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		        }
+		        currentToken.append(c);
+		    }
+		    else if (c == '-') {
+		        if (currentToken.length() == 0 || 
+		            (!Character.isDigit(currentToken.charAt(0)) && !Character.isLetter(currentToken.charAt(0)))) {
+		            // Treat as a negative sign if at the start or not following a letter/number
+		            currentToken.append(c);
+		        } else if (currentToken.length() > 0 && Character.isLetter(currentToken.charAt(currentToken.length() - 1))) {
+		            // Treat as part of a number if it follows a letter (e.g., "hello-1.1")
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		            currentToken.append(c);
+		        } else {
+		            // Treat as a hyphen in a word or punctuation
+		            if (currentToken.length() > 0) {
+		                tokens[tokenCount++] = currentToken.toString();
+		                currentToken.setLength(0);
+		            }
+		            tokens[tokenCount++] = String.valueOf(c); // Treat the hyphen as a separate token
+		        }
+		    }
+		    else if (Character.isLetter(c)) {
+		        // Handle letters
+		        if (currentToken.length() > 0 && 
+		            (!Character.isLetter(currentToken.charAt(0)) && currentToken.charAt(0) != '-' && !Character.isDigit(currentToken.charAt(0)))) {
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		        }
+		        currentToken.append(c);
+		    }
+		    else {
+		        // Handle other characters as separate tokens
+		        if (currentToken.length() > 0) {
+		            tokens[tokenCount++] = currentToken.toString();
+		            currentToken.setLength(0);
+		        }
+		        tokens[tokenCount++] = String.valueOf(c);
+		    }
 		}
-		String[] ans = new String[curr];
-		for (int i = 0; i < curr; i++)ans[i] = result[i];
+		if (currentToken.length() > 0) {
+		    tokens[tokenCount++] = currentToken.toString();
+		}
+		
+		String[] ans = new String[tokenCount];
+		for (int i = 0; i < tokenCount; i++) ans[i] = tokens[i];
 		return ans;
+
 	}
 	
 	/**
