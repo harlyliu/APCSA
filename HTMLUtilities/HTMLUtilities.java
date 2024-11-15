@@ -1,8 +1,13 @@
 /**
  *	Utilities for handling HTML
- *
- *	@author	
- *	@since	
+ * Breaks up a regular string into different tokens
+ * tags: <html>
+ * strings: hello-word
+ * ints: 0, -4e-2,-3.15
+ * punctuation: . : '
+ * and takes into account comments and <pre>
+ *	@author	Harly Liu
+ *	@since	11/14/2024
  */
 public class HTMLUtilities {
 	// NONE = not nested in a block, COMMENT = inside a comment block
@@ -19,7 +24,7 @@ public class HTMLUtilities {
 	 *	@return				the String array of tokens
 	 */
 	public String[] tokenizeHTMLString(String str) {
-		String[] tokens = new String[str.length()];
+		String[] tokens = new String[10000];
 		int count = 0;
 		
 		String currStr = new String();
@@ -31,8 +36,6 @@ public class HTMLUtilities {
 		}
 		else if (state == TokenState.PREFORMAT && str.equals("</pre>")){
 			state = TokenState.NONE;
-			count++;
-			tokens[0] = str;
 		}
 		else if (state == TokenState.PREFORMAT){
 			count++;
@@ -49,9 +52,14 @@ public class HTMLUtilities {
 					i += 4;
 				}
 			}
-			else if (i +3 <= str.length() && state == TokenState.COMMENT && str.substring(i, i+3).equals("-->")){
+			else if (i +3 <= str.length() && state == TokenState.COMMENT
+			 && str.substring(i, i+3).equals("-->")){
 				state = TokenState.NONE;
-				i += 4;
+				currStr = "";
+				i += 3;
+				if (i < str.length()){
+					c = str.charAt(i);
+				}
 			}
 			if (i < str.length() && state == TokenState.NONE){
 				if (c == '<') {
@@ -80,10 +88,14 @@ public class HTMLUtilities {
 					}
 				}
 				else if (Character.isDigit(c) || c == '.') {
-					if (currStr.length() > 0 && 
+					if (currStr.length() > 0 && currStr.charAt(currStr.length()-1) == 'e' 
+					&& !Character.isLetter(currStr.charAt(0)) 
+					||  currStr.length() > 0 && currStr.charAt(currStr.length()-1) == '-'){}
+					else if (currStr.length() > 0 && 
 						!Character.isDigit(currStr.charAt(currStr.length() - 1)) &&
 						currStr.charAt(currStr.length() - 1) != '.' &&
-						!(currStr.length() == 1 && currStr.charAt(0) == '-')) {
+						!(currStr.length() == 1 && currStr.charAt(0) == '-')
+						|| c == '.' && currStr.indexOf('.') != -1) {
 						tokens[count++] = currStr;
 						currStr = "";
 					}
@@ -91,13 +103,22 @@ public class HTMLUtilities {
 				}
 				else if (c == '-') {
 					if (currStr.length() == 0 || 
-						(!Character.isDigit(currStr.charAt(0)) && !Character.isLetter(currStr.charAt(0)))) {
+						(!Character.isDigit(currStr.charAt(0)) && 
+						!Character.isLetter(currStr.charAt(0)))
+						|| Character.isDigit(currStr.charAt(0))
+						&& currStr.charAt(currStr.length()-1) == 'e') {
 						currStr += c;
 					}
-					else if (currStr.length() > 0 && Character.isLetter(currStr.charAt(currStr.length() - 1))) {
-							tokens[count++] = currStr.toString();
-							currStr = "";
-							currStr += c;
+					else if (currStr.length() > 0 && 
+						Character.isLetter(currStr.charAt(currStr.length() - 1))) {
+							if (i + 1 < str.length() && Character.isLetter(str.charAt(i+1))){
+								currStr += c;
+							}
+							else{
+								tokens[count++] = currStr.toString();
+								currStr = "";
+								currStr += c;
+							}
 						}
 					else {
 						if (currStr.length() > 0) {
@@ -107,9 +128,26 @@ public class HTMLUtilities {
 						tokens[count++] = "" + c;
 					}
 				}
+				else if (c == 'e'){
+					if (currStr.length() != 0 && 
+					Character.isDigit(currStr.charAt(currStr.length()-1))){
+						currStr += c;
+					}
+					else{
+						if (currStr.length() > 0 && 
+						(!Character.isLetter(currStr.charAt(0)) && 
+						currStr.charAt(0) != '-' && !Character.isDigit(currStr.charAt(0)))) {
+							tokens[count++] = currStr;
+							currStr = "";
+						}
+						currStr += c;
+					}
+				}
 				else if (Character.isLetter(c)) {
 					if (currStr.length() > 0 && 
-						(!Character.isLetter(currStr.charAt(0)) && currStr.charAt(0) != '-' && !Character.isDigit(currStr.charAt(0)))) {
+						(!Character.isLetter(currStr.charAt(0)) && 
+						currStr.charAt(0) != '-' && 
+						!Character.isDigit(currStr.charAt(0)))) {
 						tokens[count++] = currStr;
 						currStr = "";
 					}
