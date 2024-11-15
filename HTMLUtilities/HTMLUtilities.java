@@ -64,7 +64,7 @@ public class HTMLUtilities {
 			if (i < str.length() && state == TokenState.NONE){
 				if (c == '<') {
 					if (currStr.length() > 0) {
-						tokens[count++] = currStr.toString();
+						tokens[count++] = currStr;
 						currStr = "";
 					}
 					inTag = true;
@@ -83,7 +83,7 @@ public class HTMLUtilities {
 				}
 				else if (Character.isWhitespace(c)) {
 					if (currStr.length() > 0) {
-						tokens[count++] = currStr.toString();
+						tokens[count++] = currStr;
 						currStr = "";
 					}
 				}
@@ -115,14 +115,14 @@ public class HTMLUtilities {
 								currStr += c;
 							}
 							else{
-								tokens[count++] = currStr.toString();
+								tokens[count++] = currStr;
 								currStr = "";
 								currStr += c;
 							}
 						}
 					else {
 						if (currStr.length() > 0) {
-							tokens[count++] = currStr.toString();
+							tokens[count++] = currStr;
 							currStr = "";
 						}
 						tokens[count++] = "" + c;
