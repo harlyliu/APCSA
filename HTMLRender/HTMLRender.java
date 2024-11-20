@@ -87,45 +87,45 @@ public class HTMLRender {
 					currTag.equalsIgnoreCase("<body>")||
 					currTag.equalsIgnoreCase("</body>")||
 					currTag.equalsIgnoreCase("<!DOCTYPE html>")){}
-				else if (currTag.equalsIgnoreCase("<p>")){
-					state = 1;
-				}
-				else if (currTag.equalsIgnoreCase("<p>")){
-					state = 2;
+				else if (currTag.equalsIgnoreCase("<p>")|| currTag.equalsIgnoreCase("</p>")){
+					browser.println();
 				}				
-				else if (currTag.equalsIgnoreCase("<q>")){
-					state = 3;
+				else if (currTag.equalsIgnoreCase("<br>")){
+					browser.printBreak();
 				}
-				else if (currTag.equalsIgnoreCase("<b>")){
-					state = 4;
+				else if (currTag.equalsIgnoreCase("</b>")){
+					browser.printBold(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<i>")){
-					state = 5;
+				else if (currTag.equalsIgnoreCase("</i>")){
+					browser.printItalic(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<hr>")){
-					state = 6;
+				else if (currTag.equalsIgnoreCase("</q>")){
+					browser.print("\"");
 				}
-				else if (currTag.equalsIgnoreCase("<h1>")){
-					state = 7;
+				else if (currTag.equalsIgnoreCase("</h1>")){
+					browser.printHeading1(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<h2>")){
-					state = 8;
+				else if (currTag.equalsIgnoreCase("</h2>")){
+					browser.printHeading2(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<h3>")){
-					state = 9;
+				else if (currTag.equalsIgnoreCase("</h3>")){
+					browser.printHeading3(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<h4>")){
-					state = 10;
+				else if (currTag.equalsIgnoreCase("</h4>")){
+					browser.printHeading4(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<h5>")){
-					state = 11;
+				else if (currTag.equalsIgnoreCase("</h5>")){
+					browser.printHeading5(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<h6>")){
-					state = 1;
+				else if (currTag.equalsIgnoreCase("</h6>")){
+					browser.printHeading6(currLine);
 				}
-				else if (currTag.equalsIgnoreCase("<pre>")){
-					state = 12;
+				else{
+					currLine = "";
 				}
+			}
+			else{
+				currLine += currTag;
 			}
 		}
 		// Sample renderings from HtmlPrinter class
@@ -148,7 +148,6 @@ public class HTMLRender {
 		
 		// Print words, then line feed (printBreak)
 		browser.print("A couple of words");
-		browser.printBreak();
 		browser.printBreak();
 		
 		// Print a double quote
