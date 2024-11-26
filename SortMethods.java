@@ -71,7 +71,6 @@ public class SortMethods {
 	}
 	
 	private Integer[] recurMerge(Integer[] arr){
-		printArray(arr);
 		if (arr.length == 1)return arr;
 		int midpoint = arr.length/2;
 		Integer[] leftArr = new Integer[midpoint];
@@ -85,9 +84,6 @@ public class SortMethods {
 	
 	private Integer[] merge(Integer[] arr1, Integer[] arr2){
 		Integer[] ans = new Integer[arr1.length + arr2.length];
-		System.out.println("merge");
-		printArray(arr1);
-		printArray(arr2);
 		int newIndex = 0;
 		int arrow1 = 0;
 		int arrow2 = 0;
@@ -112,8 +108,6 @@ public class SortMethods {
 			}
 			newIndex++;
 		}
-		printArray(ans);
-		System.out.println("endmerge");
 		return ans;
 	}
 	/*****************************************************************/
