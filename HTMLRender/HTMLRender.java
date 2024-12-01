@@ -80,56 +80,117 @@ public class HTMLRender {
 		//5 for horizontal, 6 for h1, 7 for h2, 8 for h3, 9 for h4, 10 for h5
 		//11 for h6, 12 for pre
 		for (int i = 0; i < amt; i++){
-			String currTag = tokens[i];
+			String currTag = tokens[i];System.out.println(currTag);
 			if (currTag.charAt(0) == '<' && currTag.charAt(currTag.length()-1) == '>'){
 				if (currTag.equalsIgnoreCase("<html>")||
 					currTag.equalsIgnoreCase("</html>")||
 					currTag.equalsIgnoreCase("<body>")||
 					currTag.equalsIgnoreCase("</body>")||
 					currTag.equalsIgnoreCase("<!DOCTYPE html>")){}
-				else if (currTag.equalsIgnoreCase("<p>")|| currTag.equalsIgnoreCase("</p>")){
+				if (currTag.length() >= 2 && currTag.charAt(1) != '/' && currLine != ""){
+					for (int ind = 0; ind < currLine.length(); ind+=80){
+						browser.print(currLine.substring(ind, Math.min(ind+80, currLine.length())));
+						if (ind + 80 < currLine.length()) browser.println();
+						browser.print(" ");
+					}
+					currLine = "";
+				}
+				if (currTag.equalsIgnoreCase("<p>")){
+					browser.println();
+				}
+				else if (currTag.equalsIgnoreCase("</p>")){
+					if (currLine.length() != 0)browser.print(currLine);
+					currLine = "";
 					browser.println();
 				}				
 				else if (currTag.equalsIgnoreCase("<br>")){
 					browser.printBreak();
 				}
+				else if (currTag.equalsIgnoreCase("<hr>")){
+					browser.printHorizontalRule();
+				}
 				else if (currTag.equalsIgnoreCase("</b>")){
-					browser.printBold(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=80){
+						browser.printBold(currLine.substring(ind, Math.min(ind+80, currLine.length())));
+						if (ind + 80 < currLine.length()) browser.println();
+					}
+					browser.print(" ");
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</i>")){
-					browser.printItalic(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=80){
+						browser.printItalic(currLine.substring(ind, Math.min(ind+80, currLine.length())));
+						if (ind + 80 < currLine.length()) browser.println();
+					}
+					browser.print(" ");
+					currLine = "";
 				}
-				else if (currTag.equalsIgnoreCase("</q>")){
+				else if (currTag.equalsIgnoreCase("<q>")){
 					browser.print("\"");
 				}
+				else if (currTag.equalsIgnoreCase("</q>")){
+					browser.print(currLine);
+					currLine = "";
+					browser.print("\"");
+				}
+				else if (currTag.equalsIgnoreCase("</pre>")){
+					browser.printPreformattedText(currLine);
+					browser.println();
+					currLine = "";
+				}
 				else if (currTag.equalsIgnoreCase("</h1>")){
-					browser.printHeading1(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=40){
+						browser.printHeading1(currLine.substring(ind, Math.min(ind+40, currLine.length())));
+						if (ind + 40 < currLine.length()) browser.println();
+					}
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h2>")){
-					browser.printHeading2(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=50){
+						browser.printHeading2(currLine.substring(ind, Math.min(ind+50, currLine.length())));
+						if (ind + 50 < currLine.length()) browser.println();
+					}
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h3>")){
-					browser.printHeading3(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=60){
+						browser.printHeading3(currLine.substring(ind, Math.min(ind+60, currLine.length())));
+						if (ind + 60 < currLine.length()) browser.println();
+					}
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h4>")){
-					browser.printHeading4(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=80){
+						browser.printHeading4(currLine.substring(ind, Math.min(ind+80, currLine.length())));
+						if (ind + 80 < currLine.length()) browser.println();
+					}
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h5>")){
-					browser.printHeading5(currLine);
+					for (int ind = 0; ind < currLine.length(); ind+=100){
+						browser.printHeading5(currLine.substring(ind, Math.min(ind+100, currLine.length())));
+						if (ind + 100 < currLine.length()) browser.println();
+					}
+					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h6>")){
-					browser.printHeading6(currLine);
-				}
-				else{
+					for (int ind = 0; ind < currLine.length(); ind+=120){
+						browser.printHeading6(currLine.substring(ind, Math.min(ind+120, currLine.length())));
+						if (ind + 120 < currLine.length()) browser.println();
+					}
 					currLine = "";
 				}
 			}
 			else{
-				currLine += currTag;
+				
+				if (currLine == "" || currTag.equals(".") || currTag.equals("!")
+					|| currTag.equals(",") || currTag.equals("?"))currLine += currTag;
+				else currLine += " " + currTag;
 			}
 		}
+		if (currLine != "") browser.print(currLine);
 		// Sample renderings from HtmlPrinter class
-		
+		/*
 		// Print plain text without line feed at end
 		browser.print("First line");
 		
@@ -165,6 +226,7 @@ public class HTMLRender {
 		browser.printPreformattedText("Preformat Monospace\tfont");
 		browser.printBreak();
 		browser.print("The end");
+		*/
 		
 	}
 	
