@@ -18,8 +18,8 @@
  *		<hX>, </hX> - Start/end of heading with size X = 1, 2, 3, 4, 5, 6
  *		<pre>, </pre> - Preformatted text
  *
- *	@author
- *	@version
+ *	@author Harly Liu
+ *	@version 12/2/2024
  */
  import java.util.Scanner;
 public class HTMLRender {
@@ -82,6 +82,15 @@ public class HTMLRender {
 		for (int i = 0; i < amt; i++){
 			String currTag = tokens[i];System.out.println(currTag);
 			if (currTag.charAt(0) == '<' && currTag.charAt(currTag.length()-1) == '>'){
+				if (currTag.equalsIgnoreCase("<pre>")){
+					i++;
+					while (!tokens[i].equalsIgnoreCase("</pre>")){
+						browser.printPreformattedText(tokens[i+1]);
+						browser.println();
+						i++;
+					}
+					currLine = "";
+				}
 				if (currTag.equalsIgnoreCase("<html>")||
 					currTag.equalsIgnoreCase("</html>")||
 					currTag.equalsIgnoreCase("<body>")||
@@ -132,11 +141,6 @@ public class HTMLRender {
 					browser.print(currLine);
 					currLine = "";
 					browser.print("\"");
-				}
-				else if (currTag.equalsIgnoreCase("</pre>")){
-					browser.printPreformattedText(currLine);
-					browser.println();
-					currLine = "";
 				}
 				else if (currTag.equalsIgnoreCase("</h1>")){
 					for (int ind = 0; ind < currLine.length(); ind+=40){
@@ -189,46 +193,5 @@ public class HTMLRender {
 			}
 		}
 		if (currLine != "") browser.print(currLine);
-		// Sample renderings from HtmlPrinter class
-		/*
-		// Print plain text without line feed at end
-		browser.print("First line");
-		
-		// Print line feed
-		browser.println();
-		
-		// Print bold words and plain space without line feed at end
-		browser.printBold("bold words");
-		browser.print(" ");
-		
-		// Print italic words without line feed at end
-		browser.printItalic("italic words");
-		
-		// Print horizontal rule across window (includes line feed before and after)
-		browser.printHorizontalRule();
-		
-		// Print words, then line feed (printBreak)
-		browser.print("A couple of words");
-		browser.printBreak();
-		
-		// Print a double quote
-		browser.print("\"");
-		
-		// Print Headings 1 through 6 (Largest to smallest)
-		browser.printHeading1("Heading1");
-		browser.printHeading2("Heading2");
-		browser.printHeading3("Heading3");
-		browser.printHeading4("Heading4");
-		browser.printHeading5("Heading5");
-		browser.printHeading6("Heading6");
-		
-		// Print pre-formatted text (optional)
-		browser.printPreformattedText("Preformat Monospace\tfont");
-		browser.printBreak();
-		browser.print("The end");
-		*/
-		
 	}
-	
-	
 }
