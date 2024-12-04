@@ -55,7 +55,18 @@ public class City implements Comparable<City> {
 	 }
 	
 	/**	Accessor methods */
-	
+	public String getName(){
+		return name;
+	}
+	public String getState(){
+		return state;
+	}
+	public String getDesignation(){
+		return designation;
+	}
+	public int getPopulation(){
+		return population;
+	}
 	/**	toString */
 	@Override
 	public String toString() {
