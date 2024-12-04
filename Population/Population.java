@@ -27,6 +27,7 @@ public class Population {
 	
 	public void run(){
 		Scanner infile = FileUtils.openToRead(DATA_FILE);
+		infile.useDelimiter("[\t\n]");
 		while(infile.hasNext()){
 			String cityName = infile.next();
 			String stateName = infile.next();
@@ -36,6 +37,17 @@ public class Population {
 		}	
 		printIntroduction();
 		printMenu();
+		int val = 0;
+		while (int val != 9){
+			System.out.println("1. Fifty least populous cities in USA (Selection Sort)\n"+
+				"2. Fifty most populous cities in USA (Merge Sort)\n"+
+				"3. First fifty cities sorted by name (Insertion Sort)\n"+
+				"4. Last fifty cities sorted by name descending (Merge Sort)\n"+
+				"5. Fifty most populous cities in named state\n"+
+				"6. All cities matching a name sorted by population"+
+				"9. Quit\n");
+			val = Prompt.getInt("Enter selection ->");
+		}
 	}
 	
 	/**	Prints the introduction to Population */
