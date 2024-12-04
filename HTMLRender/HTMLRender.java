@@ -187,8 +187,9 @@ public class HTMLRender {
 			}
 			else{
 				
-				if (currLine == "" || currTag.equals(".") || currTag.equals("!")
-					|| currTag.equals(",") || currTag.equals("?"))currLine += currTag;
+				if (currLine == "" || !Character.isLetter(currTag.charAt(0))
+					&&!Character.isDigit(currTag.charAt(0)) )
+					currLine += currTag;
 				else currLine += " " + currTag;
 			}
 		}
