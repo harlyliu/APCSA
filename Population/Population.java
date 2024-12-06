@@ -47,6 +47,30 @@ public class Population {
 				"6. All cities matching a name sorted by population"+
 				"9. Quit\n");
 			val = Prompt.getInt("Enter selection ->");
+			if(val == 1){
+				selectionSort(cities);
+				for (int i = 1; i <= 50; i++){
+					System.out.println(i + ":" + cities.get(cities.size()-i));
+				}
+			}
+			else if (val == 2){
+				mergeSort(cities);
+				for (int i = 0; i < 50; i++){
+					System.out.println(i + ":" + cities.get(i));
+				}
+			}
+			else if (val == 3){
+				insertionSort(cities);
+				for (int i = 0; i < 50; i++){
+					System.out.println(i + ":" + cities.get(i));
+				}
+			}
+			else if (val == 4){
+				mergeSort(cities);
+				for (int i = 0; i < 50; i++){
+					System.out.println(i + ":" + cities.get(i));
+				}
+			}
 		}
 	}
 	
@@ -75,10 +99,10 @@ public class Population {
      *	Bubble Sort algorithm - in ascending order
      *	@param arr		array of Integer objects to sort
      */
-    public void bubbleSort(Integer [] arr) {
-        for (int outer = arr.length-1; outer >= 0; outer--){
+    public void bubbleSort(List<City> arr) {
+        for (int outer = arr.size()-1; outer >= 0; outer--){
             for (int inner = 0; inner < outer; inner++){
-                if (arr[inner].compareTo(arr[inner+1]) > 0)
+                if (arr.get(inner).compareTo(arr.get(inner+1)) > 0)
                     swap(arr, inner, inner+1);
             }
         }
@@ -90,21 +114,21 @@ public class Population {
      *	@param x		index of first object to swap
      *	@param y		index of second object to swap
      */
-    private void swap(Integer[] arr, int x, int y) {
-        Integer temp = arr[x];
-        arr[x] = arr[y];
-        arr[y] = temp;
+    private void swap(List<City> arr, int x, int y) {
+        City temp = arr.get(x);
+        arr.get(x) = arr.get(y);
+        arr.get(y) = temp;
     }
 
     /**
      *	Selection Sort algorithm - in ascending order (you implement)
      *	@param arr		array of Integer objects to sort
      */
-    public void selectionSort(Integer [] arr) {
-        for (int outer = arr.length-1; outer >= 0; outer--){
+    public void selectionSort(List<City> arr) {
+        for (int outer = arr.size()-1; outer >= 0; outer--){
             int pointer = 0;
             for (int inner = 0; inner <= outer; inner++){
-                if (arr[inner].compareTo(arr[pointer]) > 0)
+                if (arr.get(inner).compareTo(arr.get(pointer)) > 0)
                     pointer = inner;
             }
             swap(arr, pointer, outer);
@@ -115,59 +139,57 @@ public class Population {
      *	Insertion Sort algorithm - in ascending order (you implement)
      *	@param arr		array of Integer objects to sort
      */
-    public void insertionSort(Integer [] arr) {
-        for (int outer = 1; outer < arr.length; outer++){
+    public void insertionSort(List<City> arr) {
+        for (int outer = 1; outer < arr.size(); outer++){
             for (int inner = outer; inner > 0; inner--){
-                if (arr[inner].compareTo(arr[inner-1]) < 0)
+                if (arr.get(inner).compareTo(arr[.get(inner-1)) < 0)
                     swap(arr, inner, inner-1);
             }
         }
     }
 
-    public void mergeSort(Integer [] arr) {
-        Integer[] newArr = recurMerge(arr);
-        for (int i = 0; i < arr.length; i++){
-            arr[i] = newArr[i];
+    public void mergeSort(List<City> arr) {
+        List<City> newArr = recurMerge(arr);
+        for (int i = 0; i < arr.size(); i++){
+            arr.get(i) = newArr.get(i);
         }
     }
 
-    private Integer[] recurMerge(Integer[] arr){
-        if (arr.length == 1)return arr;
-        int midpoint = arr.length/2;
-        Integer[] leftArr = new Integer[midpoint];
-        Integer[] rightArr = new Integer[arr.length-midpoint];
-        for (int i = 0; i < arr.length; i++){
-            if (i < midpoint)leftArr[i] = arr[i];
-            else rightArr[i-midpoint] = arr[i];
+    private List<City> recurMerge(List<City> arr){
+        if (arr.size() == 1)return arr;
+        int midpoint = arr.size()/2;
+        List<City> leftArr;
+        List<City> rightArr;
+        for (int i = 0; i < arr.size(); i++){
+            if (i < midpoint)leftArr.add(arr.get(i));
+            else rightArr.add(arr.get(i));
         }
         return merge(recurMerge(leftArr), recurMerge(rightArr));
     }
 
-    private Integer[] merge(Integer[] arr1, Integer[] arr2){
-        Integer[] ans = new Integer[arr1.length + arr2.length];
-        int newIndex = 0;
+    private List<City> merge(List<City> arr1, List<City> arr2){
+        List<City> ans;
         int arrow1 = 0;
         int arrow2 = 0;
-        while (arrow1 < arr1.length || arrow2 < arr2.length){
-            if (arrow1 < arr1.length && arrow2 < arr2.length){
-                if (arr1[arrow1].compareTo(arr2[arrow2]) < 0){
-                    ans[newIndex] = arr1[arrow1];
+        while (arrow1 < arr1.size() || arrow2 < arr2.size()){
+            if (arrow1 < arr1.size() && arrow2 < arr2.size()){
+                if (arr1.get(arrow1).compareTo(arr2.get(arrow2)) < 0){
+                    ans.add(arr1.get(arrow1));
                     arrow1++;
                 }
                 else{
-                    ans[newIndex] = arr2[arrow2];
+                    ans.add(arr2.get(arrow2));
                     arrow2++;
                 }
             }
-            else if (arrow1< arr1.length){
-                ans[newIndex] = arr1[arrow1];
+            else if (arrow1< arr1.size()){
+                ans.add(arr1.get(arrow1));
                 arrow1++;
             }
             else{
-                ans[newIndex] = arr2[arrow2];
+                ans.add(arr2,get(arrow2));
                 arrow2++;
             }
-            newIndex++;
         }
         return ans;
     }
