@@ -57,9 +57,9 @@ public class WordFinder {
 	public int binarySearch(List<String> listOfWords, String target) {
 		// if listOfWords is empty then return not found
 		if (listOfWords.size() == 0) return -1;
-		
+		return binarySearchIterative(listOfWords, target);
 		// otherwise, recursively perform binary search to find target word
-		return binarySearchRecurse(listOfWords, target, 0, listOfWords.size() - 1);
+		//return binarySearchRecurse(listOfWords, target, 0, listOfWords.size() - 1);
 		
 		// otherwise, iteratively perform binary search to find target word
 		//return binarySearchIterative(listOfWords, target);
@@ -105,8 +105,8 @@ public class WordFinder {
 		int right = listOfWords.size()-1;
 		while (left <= right){
 			int mid = (left+right)/2;
-			if (listOfWords.get(mid).compareTo(target) == 0)return mid;
-			else if (listOfWords.get(mid).compareTo(target) < 0) right = mid-1;
+			if (listOfWords.get(mid).equalsIgnoreCase(target))return mid;
+			else if (listOfWords.get(mid).compareTo(target) > 0) right = mid-1;
 			else left = mid+1;
 		}
 		return -1;
