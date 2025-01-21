@@ -1,115 +1,102 @@
-
-/**
- *	Provides utilities for word games:
- *	1. finds all words in the dictionary that match a list of letters
- *	2. prints an array of words to the screen in tabular format
- *	3. finds the word from an array of words with the highest score
- *	4. calculates the score of a word according to a table
- *
- *	Uses the FileUtils and Prompt classes.
- *	
- *	@author Harly Liu
- *	@since	10/19/2024
- */
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-public class WordUtils
-{
-	private List<String> allWords;		// the dictionary of words
+/**
+ *	AnagramMaker - <description goes here>
+ *
+ *	Requires the WordUtilities, SortMethods, Prompt, and FileUtils classes
+ *
+ *	@author	
+ *	@since	
+ */
+public class AnagramMaker {
+								
+	private final String FILE_NAME = "randomWords.txt";	// file containing all words
 	
-	// File containing dictionary of almost 100,000 words.
-	private final String WORD_FILE = "wordList.txt";
+	private WordUtilities wu;	// the word utilities for building the word
+								// database, sorting the database,
+								// and finding all words that match
+								// a string of characters
 	
-	private List<List<String>> words;	// words that match letters, 1st dimension
-								// is number of letters in the word
-	private int [] numWords;	// the number of words found
-	
-	private int wordsFound = 0;
-	
-	/* Constructor */
-	public WordUtils(int letters) { 
-		words = new ArrayList<new ArrayList<>>(letters);
-		numWords = new ArrayList<>(letters);
+	// variables for constraining the print output of AnagramMaker
+	private int numWords;		// the number of words in a phrase to print
+	private int maxPhrases;		// the maximum number of phrases to print
+	private int numPhrases;		// the number of phrases that have been printed
+		
+	/*	Initialize the database inside WordUtilities
+	 *	The database of words does NOT have to be sorted for AnagramMaker to work,
+	 *	but the output will appear in order if you DO sort.
+	 */
+	public AnagramMaker() {
+		wu = new WordUtilities();
+		wu.readWordsFromFile(FILE_NAME);
+		wu.sortWords();
 	}
 	
-	/**	Load all of the dictionary from a file into words array. */
-	private void loadWords () { 
-			allWords = new ArrayList<>();
-			Scanner wordScanner = FileUtils.openToRead(WORD_FILE);
-			while (wordScanner.hasNext()){
-				allWords.add(wordScanner.next());
-			}
-			wordScanner.close();
+	public static void main(String[] args) {
+		AnagramMaker am = new AnagramMaker();
+		am.run();
+	}
+	
+	/**	The top routine that prints the introduction and runs the anagram-maker.
+	 */
+	public void run() {
+		printIntroduction();
+		runAnagramMaker();
+		System.out.println("\nThanks for using AnagramMaker!\n");
 	}
 	
 	/**
-	 *  Decides if a word matches a group of letters.
-	 *
-	 *  @param word  The word to test.
-	 *  @param letters  A string of letters to compare
-	 *  @return  true if the word matches the letters, false otherwise
+	 *	Print the introduction to AnagramMaker
 	 */
-	public boolean isWordMatch (String word, String letters) {
-		for (int a = 0; a < word.length(); a++){
-			char c = word.charAt(a);
-			if (letters.indexOf(c) > -1)
-				letters = letters.substring(0, letters.indexOf(c))
-						+ letters.substring(letters.indexOf(c) + 1);
-			else
-				return false;
-		}
-		return true;
-	}
-		/**
-	 *	Determines if a word's characters match a group of letters
-	 *	@param word		the word to check
-	 *	@param letters	the letters
-	 *	@return			true if the word's chars match; false otherwise
-	 */
-	private boolean wordMatch(String word, String letters) {
-		// if the word is longer than letters return false
-		if (word.length() > letters.length()) return false;
-		
-		// while there are still characters in word, check each word character
-		// with letters
-		while (word.length() > 0) {
-			// using the first character in word, find the character's index inside letters
-			// and ignore the case
-			int index = letters.toLowerCase().indexOf(Character.toLowerCase(word.charAt(0)));
-			// if the word character is not in letters, then return false
-			if (index < 0) return false;
-			
-			// remove character from word and letters
-			word = word.substring(1);
-			letters = letters.substring(0, index) + letters.substring(index + 1);
-		}
-		// all word letters were found in letters
-		return true;
+	public void printIntroduction() {
+		System.out.println("\nWelcome to ANAGRAM MAKER");
+		System.out.println("\nProvide a word, name, or phrase and out comes their anagrams.");
+		System.out.println("You can choose the number of words in the anagram.");
+		System.out.println("You can choose the number of anagrams shown.");
+		System.out.println("\nLet's get started!");
 	}
 	
-		/**
-		 *	finds all words that match some or all of a group of alphabetic characters
-		 *	Precondition: letters can only contain alphabetic characters a-z and A-Z
-		 *	@param letters		group of alphabetic characters
-		 *	@return				an ArrayList of all the words that match some or all
-		 *						of the characters in letters
-		 */
-		public ArrayList<String> allWords(String letters) {
-			ArrayList<String> wordsFound = new ArrayList<String>();
-			// check each word in the database with the letters
-			for (String word: words[letters.length()])
-				if (wordMatch(word, letters))
-					wordsFound.add(word);
-			return wordsFound;
+	/**
+	 *	Prompt the user for a phrase of characters, then create anagrams from those
+	 *	characters.
+	 */
+	public void runAnagramMaker() {
+		String testWord = "computerscience";
+		numPhrases = 0;
+		maxPhrases = 10;
+		numWords = 3;
+		recur(testWord, "", numWords);
+	}
+	
+	public String removeSubstring(String str, String subStr) {
+        String ans = new String(str);
+        for (int i = 0; i < subStr.length(); i++){
+			int ind = ans.indexOf(subStr.charAt(i));
+			ans = ans.substring(0, ind) + ans.substring(ind+1);
+		}
+		return ans;
+	}
+	
+       
+	
+	public void recur(String str, String currAnagram, int wordsLeft){
+		if (wordsLeft == 0 && str.length() != 0)return;
+		if (numPhrases >= maxPhrases) return;
+		if (str.length() == 0){
+			if (wordsLeft == 0) {
+				System.out.println(currAnagram);
+				numPhrases++;
+			}
+			return;
+		}
+		List<String> temp = new ArrayList<String>();
+		temp = wu.allWords(str);
+		for (int i = 0; i < temp.size(); i++){
+			recur(removeSubstring(str, temp.get(i)), currAnagram + temp.get(i) + " ", wordsLeft-1);
 		}
 		
-		/**
-		 *	Sort the words in the database
-		 */
-		public void sortWords() {
-			SortMethods sm = new SortMethods();
-			sm.mergeSort(words);
-		}
+	}
 
+	
 }
