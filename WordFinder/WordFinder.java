@@ -22,6 +22,7 @@ public class AnagramMaker {
 	private int numWords;		// the number of words in a phrase to print
 	private int maxPhrases;		// the maximum number of phrases to print
 	private int numPhrases;		// the number of phrases that have been printed
+	private boolean wentOver;
 		
 	/*	Initialize the database inside WordUtilities
 	 *	The database of words does NOT have to be sorted for AnagramMaker to work,
@@ -62,11 +63,24 @@ public class AnagramMaker {
 	 *	characters.
 	 */
 	public void runAnagramMaker() {
-		String testWord = "computerscience";
-		numPhrases = 0;
-		maxPhrases = 10;
-		numWords = 3;
-		recur(testWord, "", numWords);
+		String inp;
+		do{
+			wentOver = false;
+			inp = Prompt.getString("Word(s), name or phrase (q to quit)");
+			if (!inp.equalsIgnoreCase("q")){
+				String str ="";
+				for (int i = 0; i < inp.length(); i++){
+					if (Character.isLetter(inp.charAt(i))) str += inp.charAt(i);
+				}
+				numWords = Prompt.getInt("Number of words in anagram");
+				maxPhrases = Prompt.getInt("Maximum number of anagrams to print");
+				numPhrases = 0;	
+				recur(str, "", numWords);
+				if (wentOver)
+					System.out.println("Stopped at " + maxPhrases + " anagrams");
+					System.out.println();
+			}
+		}while(!inp.equalsIgnoreCase("q"));
 	}
 	
 	public String removeSubstring(String str, String subStr) {
@@ -82,9 +96,10 @@ public class AnagramMaker {
 	
 	public void recur(String str, String currAnagram, int wordsLeft){
 		if (wordsLeft == 0 && str.length() != 0)return;
-		if (numPhrases >= maxPhrases) return;
+		if (wentOver)return;
 		if (str.length() == 0){
 			if (wordsLeft == 0) {
+				if (numPhrases +1 == maxPhrases)wentOver = true;
 				System.out.println(currAnagram);
 				numPhrases++;
 			}
