@@ -216,7 +216,22 @@ public class Picture extends SimplePicture
       }
     }
   }
-  
+	/*  <Description here>    
+	* @param amplitude  The maximum shift of pixels    
+	* @return Wavy picture    */   
+	public Picture wavy(int amplitude) {
+	    Pixel[][] pixels = this.getPixels2D();  
+		Picture result = new Picture(this);
+		Pixel[][] resultPixels = result.getPixels2D(); 
+		for (int row = 0; row < pixels.length; row++){
+			for (int col = 0; col < pixels[row].length; col++){
+				resultPixels[row][(int)(col+pixels[row].length + 
+						amplitude * Math.sin(2*Math.PI *row/200))%
+						pixels[row].length].setColor(pixels[row][col].getColor());
+			}
+		}
+		return result;
+	}
   
   /* Main method for testing - each class in Java can have a main 
    * method 
