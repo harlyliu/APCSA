@@ -11,7 +11,7 @@ public class PictureTester
   /** Method to test zeroBlue */
   public static void testZeroBlue()
   {
-    Picture beach = new Picture("beach.jpg");
+    Picture beach = new Picture("images/beach.jpg");
     beach.explore();
     beach.zeroBlue();
     beach.explore();
@@ -20,7 +20,7 @@ public class PictureTester
   /** Method to test mirrorVertical */
   public static void testMirrorVertical()
   {
-    Picture caterpillar = new Picture("caterpillar.jpg");
+    Picture caterpillar = new Picture("images/caterpillar.jpg");
     caterpillar.explore();
     caterpillar.mirrorVertical();
     caterpillar.explore();
@@ -29,7 +29,7 @@ public class PictureTester
   /** Method to test mirrorTemple */
   public static void testMirrorTemple()
   {
-    Picture temple = new Picture("temple.jpg");
+    Picture temple = new Picture("images/temple.jpg");
     temple.explore();
     temple.mirrorTemple();
     temple.explore();
@@ -38,7 +38,7 @@ public class PictureTester
   /** Method to test the collage method */
   public static void testCollage()
   {
-    Picture canvas = new Picture("640x480.jpg");
+    Picture canvas = new Picture("images/640x480.jpg");
     canvas.createCollage();
     canvas.explore();
   }
@@ -46,9 +46,78 @@ public class PictureTester
   /** Method to test edgeDetection */
   public static void testEdgeDetection()
   {
-    Picture swan = new Picture("swan.jpg");
+    Picture swan = new Picture("images/swan.jpg");
     swan.edgeDetection(10);
     swan.explore();
+  }
+  
+   public static void testNegate(){
+	Picture temple = new Picture("images/temple.jpg");
+	temple.explore();
+	temple.negate();
+	temple.explore();
+  }
+  public static void testKeepOnlyBlue(){
+	Picture temple = new Picture("images/temple.jpg");
+	temple.explore();
+	temple.keepOnlyBlue();
+	temple.explore();
+  }
+  public static void testGrayscale(){
+	Picture temple = new Picture("images/temple.jpg");
+	temple.explore();
+	temple.grayScale();
+	temple.explore();
+  }
+  
+   public static void testPixelate(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	beach.pixelate(10);
+	beach.explore();
+	beach = new Picture("images/beach.jpg");
+	beach.pixelate(20);
+	beach.explore();
+	beach = new Picture("images/beach.jpg");
+	beach.pixelate(30);
+	beach.explore();
+  }
+  
+  public static void testBlur(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	Picture newBeach = beach.blur(11);
+	newBeach.explore();
+  }
+  
+   public static void testEnhance(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	Picture newBeach = beach.enhance(11);
+	newBeach.explore();
+  }
+  
+   public static void testSwapLeftRight(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	Picture newBeach = beach.swapLeftRight();
+	newBeach.explore();
+  }
+  
+   public static void testStairStep(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	Picture newBeach = beach.stairStep(10,10);
+	newBeach.explore();
+	newBeach = beach.stairStep(1,400);
+	newBeach.explore();
+  }
+  
+   public static void testLiquify(){
+	Picture beach = new Picture("images/beach.jpg");
+	beach.explore();
+	Picture newBeach = beach.liquify(400);
+	newBeach.explore();
   }
   
   public static void testWavy(){
@@ -57,7 +126,6 @@ public class PictureTester
 	Picture newBeach = beach.wavy(50);
 	newBeach.explore();
   }
-  
   /** Main method for testing.  Every class can have a main
     * method in Java */
   public static void main(String[] args)
@@ -65,7 +133,13 @@ public class PictureTester
     // uncomment a call here to run a test
     // and comment out the ones you don't want
     // to run
+    //testPixelate();
+    //testBlur();
+    //testEnhance();
+    //testSwapLeftRight();
+    testLiquify();
     testWavy();
+    //testStairStep();
     //testZeroBlue();
     //testKeepOnlyBlue();
     //testKeepOnlyRed();
