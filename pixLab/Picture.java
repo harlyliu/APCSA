@@ -11,7 +11,8 @@ import java.util.List; // resolves problem with java.awt.List and java.util.List
  * SimplePicture and allows the student to add functionality to
  * the Picture class.  
  * 
- * @author Barbara Ericson ericson@cc.gatech.edu
+ * @author Barbara Ericson ericson@cc.gatech.edu and Harly Liu
+ * @since 2/14/2025
  */
 public class Picture extends SimplePicture 
 {
@@ -152,42 +153,42 @@ public class Picture extends SimplePicture
 	public void copy(Picture fromPic, 
 				 int startRow, int startCol)
 	{
-	Pixel fromPixel = null;
-	Pixel toPixel = null;
-	Pixel[][] toPixels = this.getPixels2D();
-	Pixel[][] fromPixels = fromPic.getPixels2D();
-	for (int fromRow = 0, toRow = startRow; 
-		 fromRow < fromPixels.length &&
-		 toRow < toPixels.length; 
-		 fromRow++, toRow++)
-	{
-	  for (int fromCol = 0, toCol = startCol; 
-		   fromCol < fromPixels[0].length &&
-		   toCol < toPixels[0].length;  
-		   fromCol++, toCol++)
-	  {
-		fromPixel = fromPixels[fromRow][fromCol];
-		toPixel = toPixels[toRow][toCol];
-		toPixel.setColor(fromPixel.getColor());
-	  }
-	}   
+		Pixel fromPixel = null;
+		Pixel toPixel = null;
+		Pixel[][] toPixels = this.getPixels2D();
+		Pixel[][] fromPixels = fromPic.getPixels2D();
+		for (int fromRow = 0, toRow = startRow; 
+			 fromRow < fromPixels.length &&
+			 toRow < toPixels.length; 
+			 fromRow++, toRow++)
+		{
+		  for (int fromCol = 0, toCol = startCol; 
+			   fromCol < fromPixels[0].length &&
+			   toCol < toPixels[0].length;  
+			   fromCol++, toCol++)
+		  {
+			fromPixel = fromPixels[fromRow][fromCol];
+			toPixel = toPixels[toRow][toCol];
+			toPixel.setColor(fromPixel.getColor());
+		  }
+		}   
 	}
 
 	/** Method to create a collage of several pictures */
 	public void createCollage()
 	{
-	Picture flower1 = new Picture("flower1.jpg");
-	Picture flower2 = new Picture("flower2.jpg");
-	this.copy(flower1,0,0);
-	this.copy(flower2,100,0);
-	this.copy(flower1,200,0);
-	Picture flowerNoBlue = new Picture(flower2);
-	flowerNoBlue.zeroBlue();
-	this.copy(flowerNoBlue,300,0);
-	this.copy(flower1,400,0);
-	this.copy(flower2,500,0);
-	this.mirrorVertical();
-	this.write("collage.jpg");
+		Picture flower1 = new Picture("flower1.jpg");
+		Picture flower2 = new Picture("flower2.jpg");
+		this.copy(flower1,0,0);
+		this.copy(flower2,100,0);
+		this.copy(flower1,200,0);
+		Picture flowerNoBlue = new Picture(flower2);
+		flowerNoBlue.zeroBlue();
+		this.copy(flowerNoBlue,300,0);
+		this.copy(flower1,400,0);
+		this.copy(flower2,500,0);
+		this.mirrorVertical();
+		this.write("collage.jpg");
 	}
 
 
@@ -196,46 +197,46 @@ public class Picture extends SimplePicture
 	*/
 	public void edgeDetection(int edgeDist)
 	{
-	Pixel leftPixel = null;
-	Pixel rightPixel = null;
-	Pixel[][] pixels = this.getPixels2D();
-	Color rightColor = null;
-	for (int row = 0; row < pixels.length; row++)
-	{
-	  for (int col = 0; 
-		   col < pixels[0].length-1; col++)
-	  {
-		leftPixel = pixels[row][col];
-		rightPixel = pixels[row][col+1];
-		rightColor = rightPixel.getColor();
-		if (leftPixel.colorDistance(rightColor) > 
-			edgeDist)
-		  leftPixel.setColor(Color.BLACK);
-		else
-		  leftPixel.setColor(Color.WHITE);
-	  }
-	}
+		Pixel leftPixel = null;
+		Pixel rightPixel = null;
+		Pixel[][] pixels = this.getPixels2D();
+		Color rightColor = null;
+		for (int row = 0; row < pixels.length; row++)
+		{
+		  for (int col = 0; 
+			   col < pixels[0].length-1; col++)
+		  {
+			leftPixel = pixels[row][col];
+			rightPixel = pixels[row][col+1];
+			rightColor = rightPixel.getColor();
+			if (leftPixel.colorDistance(rightColor) > 
+				edgeDist)
+			  leftPixel.setColor(Color.BLACK);
+			else
+			  leftPixel.setColor(Color.WHITE);
+		  }
+		}
 	}
 
 	public void keepOnlyBlue(){
-	Pixel[][] pixels = this.getPixels2D();
-	for (int row = 0; row < pixels.length; row++){
-		for (int col = 0; col < pixels[0].length; col++){
-			pixels[row][col].setGreen(0);
-			pixels[row][col].setRed(0);
+		Pixel[][] pixels = this.getPixels2D();
+		for (int row = 0; row < pixels.length; row++){
+			for (int col = 0; col < pixels[0].length; col++){
+				pixels[row][col].setGreen(0);
+				pixels[row][col].setRed(0);
+			}
 		}
-	}
 	}
 
 	public void negate(){
-	Pixel[][] pixels = this.getPixels2D();
-	for (int row = 0; row < pixels.length; row++){
-		for (int col = 0; col < pixels[0].length; col++){
-			pixels[row][col].setGreen(255-pixels[row][col].getGreen());
-			pixels[row][col].setRed(255-pixels[row][col].getRed());
-			pixels[row][col].setBlue(255-pixels[row][col].getBlue());
+		Pixel[][] pixels = this.getPixels2D();
+		for (int row = 0; row < pixels.length; row++){
+			for (int col = 0; col < pixels[0].length; col++){
+				pixels[row][col].setGreen(255-pixels[row][col].getGreen());
+				pixels[row][col].setRed(255-pixels[row][col].getRed());
+				pixels[row][col].setBlue(255-pixels[row][col].getBlue());
+			}
 		}
-	}
 	}
 
 	public void grayScale(){
@@ -435,6 +436,76 @@ public class Picture extends SimplePicture
 		}
 		return result;
 	}
+	
+	/** Method that creates an edge detected black/white picture
+	* @param threshold threshold as determined by Pixel’s colorDistance method
+	* @return edge detected picture
+	*/
+	public Picture edgeDetectionBelow(int threshold)
+	{ 
+		Pixel[][] pixels = this.getPixels2D();
+		Picture result = new Picture(pixels.length, pixels[0].length);
+		Pixel[][] resultPixels = result.getPixels2D(); 
+		Pixel abovePixel = null;
+		Pixel belowPixel = null;
+		Color belowColor = null;
+		for (int row = 0; row < pixels.length-1; row++)
+		{
+		  for (int col = 0; 
+			   col < pixels[0].length; col++)
+		  {
+			abovePixel = pixels[row][col];
+			belowPixel = pixels[row+1][col];
+			belowColor = belowPixel.getColor();
+			if (abovePixel.colorDistance(belowColor) > 
+				threshold)
+			  abovePixel.setColor(Color.BLACK);
+			else
+			  abovePixel.setColor(Color.WHITE);
+		  }
+		}
+		return result;
+	}
+	 
+	 
+	public boolean isGreen(Color color){
+		int red = color.getRed();
+		int green = color.getGreen();
+		int blue = color.getBlue();
+		if(green > red*1.2 && green > blue*1.2) return true;
+		return false; 
+	}
+	/** Method that creates a green screen picture
+	 * @return green screen picture
+	 */
+	 public Picture greenScreen()
+	 {
+		 // Get background picture
+		 Picture bkgnd = new Picture("images/greenScreenImages/IndoorHouseLibraryBackground.jpg");
+		 Pixel[][] bkgndPixels = bkgnd.getPixels2D();
+		 // Get cat picture
+		 Picture cat = new Picture("images/greenScreenImages/kitten1GreenScreen.jpg");
+		 Pixel[][] catPixels = cat.getPixels2D();
+		 // Get mouse picture
+		 Picture mouse = new Picture("images/greenScreenImages/mouse1GreenScreen.jpg");
+		 Pixel[][] mousePixels = mouse.getPixels2D();
+		 for (int i = 0; i < mousePixels.length; i+=3){
+			for (int j = 0; j < mousePixels[0].length; j+=3){
+				if(!isGreen(mousePixels[i][j].getColor())){
+					bkgndPixels[i/3+350][j/3+300].setColor(mousePixels[i][j].getColor());
+				}
+			}
+		 }
+		 for (int i = 0; i < catPixels.length; i+=2){
+			for (int j = 0; j < catPixels[0].length; j+=2){
+				if(!isGreen(catPixels[i][j].getColor())){
+					bkgndPixels[i/2+430][j/2+450].setColor(catPixels[i][j].getColor());
+				}
+			}
+		 }
+		 return bkgnd;
+		 
+	}
 	/* Main method for testing - each class in Java can have a main 
 	* method 
 	*/
@@ -445,5 +516,10 @@ public class Picture extends SimplePicture
 		beach.zeroBlue();
 		beach.explore();
 	}
+	
+
 
 } // this } is the end of class Picture, put all new methods before this
+	
+	
+  
