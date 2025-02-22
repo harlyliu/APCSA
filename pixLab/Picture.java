@@ -459,9 +459,9 @@ public class Picture extends SimplePicture
 			belowColor = belowPixel.getColor();
 			if (abovePixel.colorDistance(belowColor) > 
 				threshold)
-			  abovePixel.setColor(Color.BLACK);
+			  resultPixels[row][col].setColor(Color.BLACK);
 			else
-			  abovePixel.setColor(Color.WHITE);
+			  resultPixels[row][col].setColor(Color.WHITE);
 		  }
 		}
 		return result;
@@ -484,28 +484,55 @@ public class Picture extends SimplePicture
 		 Picture bkgnd = new Picture("images/greenScreenImages/IndoorHouseLibraryBackground.jpg");
 		 Pixel[][] bkgndPixels = bkgnd.getPixels2D();
 		 // Get cat picture
-		 Picture cat = new Picture("images/greenScreenImages/kitten1GreenScreen.jpg");
+		 Picture cat = new Picture("images/greenScreenImages/kitten2GreenScreen.jpg");
 		 Pixel[][] catPixels = cat.getPixels2D();
 		 // Get mouse picture
-		 Picture mouse = new Picture("images/greenScreenImages/mouse1GreenScreen.jpg");
-		 Pixel[][] mousePixels = mouse.getPixels2D();
-		 for (int i = 0; i < mousePixels.length; i+=3){
-			for (int j = 0; j < mousePixels[0].length; j+=3){
-				if(!isGreen(mousePixels[i][j].getColor())){
-					bkgndPixels[i/3+350][j/3+300].setColor(mousePixels[i][j].getColor());
+		 Picture puppy = new Picture("images/greenScreenImages/puppy1GreenScreen.jpg");
+		 Pixel[][] puppyPixels = puppy.getPixels2D();
+		 for (int i = 1; i < puppyPixels.length; i+=3){
+			for (int j = 1; j < puppyPixels[0].length; j+=3){
+				if(!isGreen(puppyPixels[i][j].getColor())){
+					bkgndPixels[i/3+300][j/3+300].setColor(puppyPixels[i][j].getColor());
 				}
 			}
 		 }
-		 for (int i = 0; i < catPixels.length; i+=2){
-			for (int j = 0; j < catPixels[0].length; j+=2){
+		 for (int i = 0; i < catPixels.length; i+=8){
+			for (int j = 0; j < catPixels[0].length; j+=8){
 				if(!isGreen(catPixels[i][j].getColor())){
-					bkgndPixels[i/2+430][j/2+450].setColor(catPixels[i][j].getColor());
+					bkgndPixels[i/8+450][j/8+450].setColor(catPixels[i][j].getColor());
 				}
 			}
 		 }
 		 return bkgnd;
 		 
 	}
+	
+	/**    
+	 *
+	 * Rotate image in radians, clean up "drop-out" pixels 
+	 * @param angle  
+	 * @return  angle of rotation in radians Picture that is rotated
+	 */ 
+	public Picture rotate(double angle) { 
+		Pixel[][] pixels = this.getPixels2D();
+		int dimension = (int)(3*Math.max(pixels.length, pixels[0].length));
+		Picture result = new Picture(dimension, dimension);
+		Pixel[][] resultPixels = result.getPixels2D(); 
+		double newRow, newCol ;
+		for (int row = 0; row < pixels.length; row++)
+		{
+		  for (int col = 0; col < pixels[0].length; col++)
+		  {
+			newRow = col*Math.cos(angle)-row*Math.sin(angle);
+			newCol = col*Math.sin(angle) + row*Math.cos(angle);
+			//System.out.println(row + " " + col);
+			//System.out.println(newRow);
+			resultPixels[(int)newRow+500][(int)newCol+500].setColor(pixels[row][col].getColor());
+		  }
+		}
+		return result;
+	}
+	
 	/* Main method for testing - each class in Java can have a main 
 	* method 
 	*/
