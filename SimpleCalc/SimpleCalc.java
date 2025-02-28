@@ -40,9 +40,8 @@ public class SimpleCalc {
 			inp = Prompt.getString("");
 			if (inp.equalsIgnoreCase("H")) 
 				printHelp();
-			else{
+			else if (!inp.equalsIgnoreCase("q")){
 				List<String> terms = utils.tokenizeExpression(inp);
-				System.out.println(toPostFix(terms));
 				System.out.println(evaluateExpression(toPostFix(terms)));
 			}
 		}while (!inp.equalsIgnoreCase("q"));
@@ -69,7 +68,9 @@ public class SimpleCalc {
 					if (hasPrecedence(operatorStack.peek(), str)) 
 						operatorStack.push(str);
 					else{
-						while(!hasPrecedence(operatorStack.peek(),str) && !operatorStack.peek().equals("(")){
+						while(!operatorStack.isEmpty() 
+							&& !hasPrecedence(operatorStack.peek(),str) 
+							&&!operatorStack.peek().equals("(")){
 							ans.add(operatorStack.pop());
 						}
 						operatorStack.push(str);
@@ -116,37 +117,39 @@ public class SimpleCalc {
 				
 				value1 = valueStack.pop();
 				value2 = valueStack.pop();
-				System.out.println(value1 + " " + value2 + " " + token);
-				if (token.equals("+")){
-					valueStack.push(value1 + value2);
-				}
-				else if (token.equals("-")){
-					valueStack.push(value2 - value1);
-				}
-				else if (token.equals("*")){
-					valueStack.push(value1*value2);
-				}
-				else if (token.equals("/")){
-					valueStack.push(value2/value1);
-				}
-				else if (token.equals("%")){
-					valueStack.push(value2%value1);
-				}
-				else{
-					valueStack.push(Math.pow(value2, value1));
-				}
-				System.out.println(valueStack.peek());
+				valueStack.push(perfOperation(value2, value1, token));
 			}
 		}
 		value = valueStack.pop();
 		return value;
 	}
 	
+	public double perfOperation(double value1, double value2, String operator){
+		if (operator.equals("+")){
+			return value1 + value2;
+		}
+		else if (operator.equals("-")){
+			return value1 - value2;
+		}
+		else if (operator.equals("*")){
+			return value1*value2;
+		}
+		else if (operator.equals("/")){
+			return value1/value2;
+		}
+		else if (operator.equals("%")){
+			return value1%value2;
+		}
+		else{
+			return Math.pow(value1, value2);
+		}
+	}
+	
 	/**
 	 *	Precedence of operators
 	 *	@param op1	operator 1
 	 *	@param op2	operator 2
-	 *	@return		true if op2 has higher or same precedence as op1; false otherwise
+	 *	@return		true if op2 has higher precedence as op1; false otherwise
 	 *	Algorithm:
 	 *		if op1 is exponent, then false
 	 *		if op2 is either left or right parenthesis, then false
@@ -155,12 +158,21 @@ public class SimpleCalc {
 	 *		otherwise true
 	 */
 	private boolean hasPrecedence(String op1, String op2) {
+		if (samePrecedence(op1, op2)) return false;
 		if (op1.equals("^")) return false;
 		if (op2.equals("(") || op2.equals(")")) return false;
 		if ((op1.equals("*") || op1.equals("/") || op1.equals("%")) 
 				&& (op2.equals("+") || op2.equals("-")))
 			return false;
 		return true;
+	}
+	
+	private boolean samePrecedence(String op1, String op2){
+		if ("*/%".contains(op1) && "*/%".contains(op2)) 
+			return true;
+		else if ("+-".indexOf(op1) != -1 && "+-".indexOf(op2) != -1)
+			return true;
+		return false;
 	}
 	 
 }
