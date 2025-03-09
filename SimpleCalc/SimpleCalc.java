@@ -1,17 +1,17 @@
 import java.util.List;		// used by expression evaluator
 import java.util.ArrayList;
 /**
- *	<Description goes here>
- *
- *	@author	
- *	@since	
+ *	This program creates a smiple calculator implemented using stacks.
+ *	It can handle +,-,*,/,&,(),^ and can use and hold variables
+ *	@author	Harly Liu
+ *	@since	3/9/2025
  */
 public class SimpleCalc {
 	
 	private ExprUtils utils;	// expression utilities
 	private ArrayStack<Double> valueStack;		// value stack
 	private ArrayStack<String> operatorStack;	// operator stack
-
+	private ArrayList<Identifier> identifiers;
 	// constructor	
 	public SimpleCalc() {
 		utils = new ExprUtils();
@@ -36,22 +36,84 @@ public class SimpleCalc {
 	 */
 	public void runCalc() {
 		String inp = "";
+		identifiers = new ArrayList<Identifier>();
+		Identifier variable = new Identifier("",0);
+		String name = "";
+		double val = 0;
+		identifiers.add(new Identifier("e", 2.718281828459045));
+		identifiers.add(new Identifier("pi", 3.141592653589793));
 		do{
 			inp = Prompt.getString("");
 			if (inp.equalsIgnoreCase("H")) 
 				printHelp();
+			else if (inp.equalsIgnoreCase("1")){
+				System.out.println("Identifiers");
+				for (Identifier var: identifiers){
+					System.out.printf("  %-10s = %.7f\n",var.getName(),var.getValue());
+				}
+			}
 			else if (!inp.equalsIgnoreCase("q")){
 				List<String> terms = utils.tokenizeExpression(inp);
-				System.out.println(evaluateExpression(toPostFix(terms)));
+				//System.out.println(terms);
+				if (terms.size() >= 2 && terms.indexOf("=") != -1){
+					name = terms.get(0);
+					//System.out.println(isVariableName("piTimes2"));
+					if (!isVariableName(name) || terms.indexOf("=") != 1)
+						System.out.println(0.0);
+					else{
+						terms.remove(0);
+						terms.remove(0);
+						//System.out.println(toPostFix(terms));
+						val = evaluateExpression(toPostFix(terms));
+						variable = new Identifier(name, val);
+						if (findVariable(name) != -1){
+							identifiers.get(findVariable(name)).setValue(val);
+						}
+						else identifiers.add(variable);
+						System.out.printf("  %-10s = ", name);
+						System.out.println(val);
+					}
+					
+				}
+				else{
+					val = evaluateExpression(toPostFix(terms));
+					System.out.println(val);
+				}
 			}
 		}while (!inp.equalsIgnoreCase("q"));
+	}
+	
+	public boolean isVariableName(String name){
+		if (isNumber(name)) return false;
+		if (name.length() == 1) return Character.isLetter(name.charAt(0));
+		for (int i = 0; i < name.length(); i++){
+			if (!Character.isLetter(name.charAt(i))) return false;
+		}
+		return true;
+	}
+	
+	public int findVariable(String str){
+		for (int i = identifiers.size()-1; i >= 0; i--){
+			Identifier id = identifiers.get(i);
+			if (id.getName().equals(str)){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	public List<String> toPostFix(List<String> terms){
 		List<String> ans = new ArrayList<>();
 		ArrayStack<String> operatorStack = new ArrayStack<String>();
 		for (String str:terms){
-			if (isNumber(str))
+			if (isVariableName(str)){
+				if (findVariable(str) == -1){
+					ans.add("0.0");
+				}
+				else
+					ans.add(Double.toString(identifiers.get(findVariable(str)).getValue()));
+			}
+			else if (isNumber(str))
 				ans.add(str);
 			else if (str.equals("("))
 				operatorStack.push(str);
@@ -114,7 +176,6 @@ public class SimpleCalc {
 			if (isNumber(token))
 				valueStack.push(Double.parseDouble(token));
 			else{
-				
 				value1 = valueStack.pop();
 				value2 = valueStack.pop();
 				valueStack.push(perfOperation(value2, value1, token));
