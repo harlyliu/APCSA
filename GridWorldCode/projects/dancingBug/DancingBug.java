@@ -22,23 +22,22 @@ import info.gridworld.actor.Bug;
  * A <code>BoxBug</code> traces out a square "box" of a given size. <br />
  * The implementation of this class is testable on the AP CS A and AB exams.
  */
-public class ZBug extends Bug
+public class DancingBug extends Bug
 {
     private int steps;
     private int sideLength;
-    int turns = 0;
+    private int ind;
+    private int[] turns ={ 1, 0, 0, 0, 1, 0, 0, 3, 4,4, 0, 0, 1, 0, 3, 2, 0, 7, 0, 0, 0, 3, 2, 1 };;
 
     /**
      * Constructs a box bug that traces a square of a given side length
      * @param length the side length
      */
-    public ZBug(int length)
+    public DancingBug(int length)
     {
         steps = 0;
+        ind = 0;
         sideLength = length;
-        turns = 0;
-        turn();
-        turn();
     }
 
     /**
@@ -46,26 +45,17 @@ public class ZBug extends Bug
      */
     public void act()
     {
-		if (turns >= 3) {
-			return;
-		}
-        if (steps < sideLength && canMove())
+		if (steps < sideLength && canMove())
         {
             move();
             steps++;
         }
         else
         {
-			if (turns < 2){
+			for (int i = 0; i < turns[ind]; i++){
 				turn();
-				turn();
-				turn();
-				if (turns == 1){
-					turn();
-					turn();
-				}
 			}
-            turns++;
+			ind = (ind+1)%turns.length;
             steps = 0;
         }
     }
