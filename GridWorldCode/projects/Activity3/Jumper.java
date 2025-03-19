@@ -14,11 +14,15 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.actor;
+import info.gridworld.actor.Bug;
+import info.gridworld.actor.Actor;
+import info.gridworld.actor.Flower;
+import info.gridworld.grid.Location;
+import info.gridworld.grid.Grid;
+//package info.gridworld.actor;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
-import info.gridworld.actor.*;
 
 import java.awt.Color;
 
@@ -29,34 +33,65 @@ import java.awt.Color;
  */
 public class Jumper extends Bug
 {
+	private int dist = -1;
+	private int jumped;
     /**
-     * Constructs a red bug.
+     * Constructs a blue bug.
      */
     public Jumper()
     {
         setColor(Color.BLUE);
     }
-
-    /**
-     * Constructs a bug of a given color.
-     * @param bugColor the color for this bug
-     */
-    public Jumper(Color bugColor)
-    {
-        setColor(bugColor);
-    }
+    
+    public Jumper(int distIn){
+		setColor(Color.BLUE);
+		dist = distIn;
+	}
 
     /**
      * Moves if it can move, turns otherwise.
      */
     public void act()
     {
-        if (canMove())
-            move();
-        else
+		Grid<Actor> gr = getGrid();
+		if (isSurrounded()){
+			System.out.println("1");
+			if (gr.isValid(getLocation().getAdjacentLocation(getDirection()))){
+				move();
+			}
+			else turn();
+		}
+		else if (dist != -1 && canJump() && jumped < dist){
+			System.out.println(2);
+			jump();
+			jumped+= 2;
+		}
+        else if (dist == -1 && canJump()){
+			System.out.println(3);
+            jump();
+            jumped+=2;
+		}
+        else{
+			System.out.println(4);
+			jumped = 0;
             turn();
+		}
     }
-
+	
+	public boolean isSurrounded(){
+		Grid<Actor> gr = getGrid();
+		boolean ans = true;
+		for (int i = 0; i < 8; i++){
+			setDirection(getDirection() + Location.HALF_RIGHT);
+			Location loc = getLocation();
+			Location fakeNext = loc.getAdjacentLocation(getDirection());
+			Location next = fakeNext.getAdjacentLocation(getDirection());
+			if (gr.isValid(next) && canJump()){
+				ans = false;
+			}
+		}
+		return ans;
+	}
     /**
      * Turns the bug 45 degrees to the right without changing its location.
      */
@@ -75,18 +110,19 @@ public class Jumper extends Bug
         if (gr == null)
             return;
         Location loc = getLocation();
-        Location next = loc.getAdjacentLocation(getDirection());
-        if (gr.isValid(next))
+        Location fakeNext = loc.getAdjacentLocation(getDirection());
+        Location next = fakeNext.getAdjacentLocation(getDirection());
+        if (gr.isValid(next) && canJump())
             moveTo(next);
         else
             removeSelfFromGrid();
-        Blossom blossom = new Blossom(getColor());
+        Blossom blossom = new Blossom();
         blossom.putSelfInGrid(gr, loc);
     }
 
     /**
      * Tests whether this bug can move forward into a location that is empty or
-     * contains a flower.
+     * contains a blossom.
      * @return true if this bug can move.
      */
     public boolean canJump()
@@ -100,7 +136,7 @@ public class Jumper extends Bug
         if (!gr.isValid(next))
             return false;
         Actor neighbor = gr.get(next);
-        return (neighbor == null) || (neighbor instanceof Flower) || (neighbor instanceof Blossom);
+        return (neighbor == null) || (neighbor instanceof Flower);
         // ok to move into empty location or onto flower
         // not ok to move onto any other actor
     }
