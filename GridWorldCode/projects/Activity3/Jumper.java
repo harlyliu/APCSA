@@ -55,24 +55,20 @@ public class Jumper extends Bug
     {
 		Grid<Actor> gr = getGrid();
 		if (isSurrounded()){
-			System.out.println("1");
 			if (gr.isValid(getLocation().getAdjacentLocation(getDirection()))){
 				move();
 			}
 			else turn();
 		}
 		else if (dist != -1 && canJump() && jumped < dist){
-			System.out.println(2);
 			jump();
 			jumped+= 2;
 		}
         else if (dist == -1 && canJump()){
-			System.out.println(3);
             jump();
             jumped+=2;
 		}
         else{
-			System.out.println(4);
 			jumped = 0;
             turn();
 		}
@@ -136,7 +132,7 @@ public class Jumper extends Bug
         if (!gr.isValid(next))
             return false;
         Actor neighbor = gr.get(next);
-        return (neighbor == null) || (neighbor instanceof Flower);
+        return (neighbor == null) && !(neighbor instanceof Blossom);
         // ok to move into empty location or onto flower
         // not ok to move onto any other actor
     }
