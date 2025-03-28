@@ -51,7 +51,7 @@ public class Coyote extends Critter {
            }
         boolean hitboulder = false;
         for (Actor ac: getActors()){
-			if (ac.getLocation().equals(next)) hitboulder = true;
+			if (ac.getLocation().equals(next) && ac instanceof Boulder) hitboulder = true;
 		}
         if (gr.isValid(next) && hitboulder) {
             Kaboom kab = new Kaboom();
@@ -85,4 +85,3 @@ public class Coyote extends Critter {
         }
     }
 }
-
