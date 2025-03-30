@@ -1,14 +1,17 @@
-import info.gridworld.actor.*;
-import info.gridworld.grid.*;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
+import info.gridworld.actor.Critter;
+import info.gridworld.actor.Actor;
+import info.gridworld.actor.Rock;
+import info.gridworld.actor.Flower;
 import java.awt.Color;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Coyote extends Critter {
     private int steps;
     private int sleepTime;
     private int direction;
-    private static final int MAX_STEPS = 5;
-    private static final int WAIT_TIME = 5;
 
     public Coyote() {
         setColor(null);
@@ -22,16 +25,23 @@ public class Coyote extends Critter {
             sleepTime--;
             return;
         }
-        if (steps >= MAX_STEPS || !canMove()) {
-            pickNewDirection();
-            sleepTime = WAIT_TIME;
+        if (steps >= 5 || !canMove()) {
+            steps = 0;
+			Grid<Actor> grid = getGrid();
+			if (grid == null) return;
+			List<Location> validLocations = grid.getEmptyAdjacentLocations(getLocation());
+			if (!validLocations.isEmpty()) {
+				new Stone().putSelfInGrid(grid, validLocations.get(0));
+			}
+			direction = (int) (Math.random() * 8) * 45;
+            sleepTime = 5;
             return;
         }
         move();
         steps++;
     }
 
-    private boolean canMove() {
+    public boolean canMove() {
         Grid<Actor> grid = getGrid();
         if (grid == null) return false;
         Location nextLoc = getLocation().getAdjacentLocation(direction);
@@ -46,7 +56,7 @@ public class Coyote extends Critter {
         return (neighbor == null);
     }
 
-    private void move() {
+    public void move() {
         Grid<Actor> grid = getGrid();
         if (grid == null) return;
         Location nextLoc = getLocation().getAdjacentLocation(direction);
@@ -55,14 +65,4 @@ public class Coyote extends Critter {
         }
     }
 
-    private void pickNewDirection() {
-        steps = 0;
-        Grid<Actor> grid = getGrid();
-        if (grid == null) return;
-        List<Location> validLocations = grid.getEmptyAdjacentLocations(getLocation());
-        if (!validLocations.isEmpty()) {
-            new Stone().putSelfInGrid(grid, validLocations.get(0));
-        }
-        direction = (int) (Math.random() * 8) * 45;
-    }
 }
