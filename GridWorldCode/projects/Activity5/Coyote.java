@@ -1,87 +1,68 @@
-import info.gridworld.actor.Actor;
-import info.gridworld.actor.Critter;
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
+import info.gridworld.actor.*;
+import info.gridworld.grid.*;
+import java.awt.Color;
+import java.util.*;
 
-import java.util.ArrayList;
-
-/**
- * A <code>Coyote</code> extends Critter.
- * The Coyote drops Stones as he wanders around the grid.
- * He moves in straight lines, but stops every couple steps to drop a stone and change direction.
- */
 public class Coyote extends Critter {
-    private int[] directions = {0, 45, 90, 135, 180, 225, 270, 315};
     private int steps;
-    private int rest;
-    private boolean resting;
+    private int sleepTime;
+    private int direction;
+    private static final int MAX_STEPS = 5;
+    private static final int WAIT_TIME = 5;
 
     public Coyote() {
         setColor(null);
-        setDirection(directions[(int) (8 * Math.random())]);
+        direction = (int) (Math.random() * 8) * 45;
         steps = 0;
-        rest = 0;
-        resting = false;
+        sleepTime = 0;
     }
 
-    /**
-     * If the crab critter doesn't move, it randomly turns left or right.
-     */
-    public void makeMove(Location loc) {
-		if (resting) {
-            if (rest < 5) {
-                rest++;
-                return;
-            } else {
-                resting = false;
-                rest = 0;
-                setDirection(directions[(int) (8 * Math.random())]);
-            }
-        }
-        Grid<Actor> gr = getGrid();
-        if (gr == null) {
+    public void act() {
+        if (sleepTime > 0) {
+            sleepTime--;
             return;
         }
-        Location next = getLocation().getAdjacentLocation(getDirection());
-        if (!gr.isValid(next)) {
-            steps = 0;
-            resting = true;
-            rest = 0;
+        if (steps >= MAX_STEPS || !canMove()) {
+            pickNewDirection();
+            sleepTime = WAIT_TIME;
             return;
-           }
-        boolean hitboulder = false;
-        for (Actor ac: getActors()){
-			if (ac.getLocation().equals(next) && ac instanceof Boulder) hitboulder = true;
-		}
-        if (gr.isValid(next) && hitboulder) {
-            Kaboom kab = new Kaboom();
-            kab.putSelfInGrid(gr, next);
+        }
+        move();
+        steps++;
+    }
+
+    private boolean canMove() {
+        Grid<Actor> grid = getGrid();
+        if (grid == null) return false;
+        Location nextLoc = getLocation().getAdjacentLocation(direction);
+        if (!grid.isValid(nextLoc)) return false;
+        Actor neighbor = grid.get(nextLoc);
+        if (neighbor instanceof Boulder) {
+            neighbor.removeSelfFromGrid();
+            new Kaboom().putSelfInGrid(grid, nextLoc);
             removeSelfFromGrid();
-            return;
-        } else if (gr.isValid(next) && gr.get(next) == null && steps < 5) {
-            steps++;
-            move();
-        } else {
-            steps = 0;
-            resting = true;
-            rest = 0;
-            ArrayList<Location> spots = gr.getValidAdjacentLocations(getLocation());
-            if (!spots.isEmpty()) {
-                Stone st = new Stone();
-                st.putSelfInGrid(gr, spots.get((int) (spots.size() * Math.random())));
-            }
+            return false;
+        }
+        return (neighbor == null);
+    }
+
+    private void move() {
+        Grid<Actor> grid = getGrid();
+        if (grid == null) return;
+        Location nextLoc = getLocation().getAdjacentLocation(direction);
+        if (grid.isValid(nextLoc) && grid.get(nextLoc) == null) {
+            moveTo(nextLoc);
         }
     }
 
-    public void move() {
-        Grid<Actor> gr = getGrid();
-        if (gr == null) {
-            return;
+    private void pickNewDirection() {
+        steps = 0;
+        Grid<Actor> grid = getGrid();
+        if (grid == null) return;
+        List<Location> validLocations = grid.getEmptyAdjacentLocations(getLocation());
+        if (!validLocations.isEmpty()) {
+            new Stone().putSelfInGrid(grid, validLocations.get(0));
         }
-        Location loc = getLocation();
-        Location next = loc.getAdjacentLocation(getDirection());
-        if (gr.isValid(next)) {
-            moveTo(next);
-        }
+        direction = (int) (Math.random() * 8) * 45;
     }
 }
