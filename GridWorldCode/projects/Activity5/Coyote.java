@@ -30,7 +30,7 @@ public class Coyote extends Critter {
 			Grid<Actor> grid = getGrid();
 			if (grid == null) return;
 			List<Location> validLocations = grid.getEmptyAdjacentLocations(getLocation());
-			if (!validLocations.isEmpty()) {
+			if (validLocations.size() > 1 && !isAtEdge()) {
 				new Stone().putSelfInGrid(grid, validLocations.get(0));
 			}
 			direction = (int) (Math.random() * 8) * 45;
@@ -40,7 +40,28 @@ public class Coyote extends Critter {
         move();
         steps++;
     }
-
+    
+    /**Checks if coyote is at edge, if it is at an edge, don't place rock
+     * so it won't corner itself
+     * @return boolean whether it is on an edge/corner
+     */
+	public boolean isAtEdge() {
+        Grid<Actor> grid = getGrid();
+        if (grid == null) {
+            return false;
+        }
+        Location loc = getLocation();
+        int row = loc.getRow();
+        int col = loc.getCol();
+        int numRows = grid.getNumRows();
+        int numCols = grid.getNumCols();
+        return row == 0 || row == numRows - 1 || col == 0 || col == numCols - 1;
+    }
+    
+     /**Checks if coyote is able to move. if next location is a boulder
+      * explosion
+     * @return boolean whether or not it can move
+     */
     public boolean canMove() {
         Grid<Actor> grid = getGrid();
         if (grid == null) return false;
