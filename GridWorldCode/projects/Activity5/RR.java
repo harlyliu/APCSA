@@ -44,7 +44,8 @@ public class RR extends Critter {
             gr.get(next).removeSelfFromGrid();
             new Kaboom().putSelfInGrid(gr, next);
             removeSelfFromGrid();
-        } else if (gr.get(next) instanceof Coyote) {
+        } 
+        else if (gr.get(next) instanceof Coyote) {
             gr.get(next).removeSelfFromGrid();
             moveTo(next);
 
@@ -52,7 +53,8 @@ public class RR extends Critter {
             if (!validLocations.isEmpty()) {
                 new SickCoyote().putSelfInGrid(gr, validLocations.get((int) (Math.random() * validLocations.size())));
             }
-        } else {
+        } 
+        else {
             moveTo(next);
         }
     }
