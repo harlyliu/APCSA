@@ -10,7 +10,14 @@ public class RR extends Critter {
         setColor(null);
         setDirection(Location.NORTH);
     }
-
+	public ArrayList<Actor> getActors()
+    {
+        return getGrid().getNeighbors(getLocation());
+    }
+    public void processActors(ArrayList<Actor> actors)
+    {
+        return;
+    }
     public void makeMove(Location loc) {
         Grid<Actor> gr = getGrid();
         if (gr == null) return;
@@ -62,7 +69,8 @@ public class RR extends Critter {
 
         if (gr.get(next) instanceof Boulder) {
             gr.get(next).removeSelfFromGrid();
-            new Kaboom().putSelfInGrid(gr, next);
+            Kaboom kb = new Kaboom();
+            kb.putSelfInGrid(gr, next);
             removeSelfFromGrid();
         } 
         else if (gr.get(next) instanceof Coyote) {
@@ -71,7 +79,9 @@ public class RR extends Critter {
 
             ArrayList<Location> validLocations = gr.getEmptyAdjacentLocations(getLocation());
             if (!validLocations.isEmpty()) {
-                new SickCoyote().putSelfInGrid(gr, validLocations.get((int) (Math.random() * validLocations.size())));
+				//System.out.print(validLocations);
+				Location newLoc = validLocations.get((int) (Math.random() * validLocations.size()));
+                new SickCoyote().putSelfInGrid(gr, newLoc);
             }
         } 
         else {
