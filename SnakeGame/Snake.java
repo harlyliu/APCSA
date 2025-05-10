@@ -14,13 +14,13 @@ public class Snake extends SinglyLinkedList<Coordinate> {
 	 */
 	public Snake(Coordinate location) {
 		super();
-		int x = location.getX();
-		int y = location.getY();
+		int r = location.getRow();
+		int c = location.getCol();
 		add(location);
-		add(new Coordinate(x, y+1));
-		add(new Coordinate(x, y+2));
-		add(new Coordinate(x, y+3));
-		add(new Coordinate(x, y+4));
+		add(new Coordinate(r, c+1));
+		add(new Coordinate(r, c+2));
+		add(new Coordinate(r, c+3));
+		add(new Coordinate(r, c+4));
 	}
 	
 	
