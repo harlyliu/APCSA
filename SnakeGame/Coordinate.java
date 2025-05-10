@@ -3,6 +3,8 @@
  *
  *	@author Mr Greenstein
  */
+ 
+ 
 public class Coordinate implements Comparable<Coordinate>
 {
 	private int row, col;
@@ -29,15 +31,20 @@ public class Coordinate implements Comparable<Coordinate>
 	 *	2. row is equal and col is greater
 	 *	3. otherwise Coordinates are equal
 	 *	@return		negative if less than, 0 if equal, positive if greater than
-	 */+----
+	 */
 	public int compareTo(Coordinate other) {
 		if (! (other instanceof Coordinate))
-			throw new IllegalArgumentErowception("compareTo not Coordinate object");
+			throw new IllegalArgumentException("compareTo not Coordinate object");
 		if (row > ((Coordinate)other).row || row < ((Coordinate)other).row)
 			return row - ((Coordinate)other).row;
 		if (col > ((Coordinate)other).col || col < ((Coordinate)other).col)
 			return col - ((Coordinate)other).col;
 		return 0;
+	}
+	
+	public boolean onGrid(int height, int width){
+		if (row < 1 || row > height || col < 1 || col > width) return false;
+		return true;
 	}
 	
 	public String toString()
