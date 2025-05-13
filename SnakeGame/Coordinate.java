@@ -42,6 +42,10 @@ public class Coordinate implements Comparable<Coordinate>
 		return 0;
 	}
 	
+	/**
+	 *	Checks if coordinate is within bounds. 
+	 *	@return	true is the coordinate is within the bounds, false otherwise
+	 */
 	public boolean onGrid(int height, int width){
 		if (row < 1 || row > height || col < 1 || col > width) return false;
 		return true;
