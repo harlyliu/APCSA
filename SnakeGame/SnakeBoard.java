@@ -55,6 +55,10 @@ public class SnakeBoard {
 	}
 	
 	/* Helper methods go here	*/
+	/**
+	 *	Resets the board to all 0's so that when a new snake is loaded
+	 * 	no squares from the old snake are left.
+	 */
 	public void clearBoard(){
 		for (int r = 0; r < board.length; r++){
 			for (int c = 0; c < board[0].length; c++){
