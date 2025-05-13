@@ -26,6 +26,10 @@ public class SnakeGame {
 		getTarget();
 	}
 	
+	/**
+	 *	generates a new target that isn't on top of a current snake
+	 *  sets field variable to new target
+	 */
 	public void getTarget(){
 		int rowCoord = (int)(Math.random()*20)+1;
 		int colCoord = (int)(Math.random()*25)+1;
@@ -102,6 +106,10 @@ public class SnakeGame {
 		System.out.println("Thank you for playing");
 	}
 	
+	/**
+	 *	opens savedGame.txt to read the file and set field variables 
+	 * 	accordingly
+	 */
 	public void restoreGame(){
 		Scanner fileIn = FileUtils.openToRead("savedGame.txt");
 		fileIn.next();
@@ -122,6 +130,9 @@ public class SnakeGame {
 		
 	}
 	
+	/**
+	 *	uses printwriter to write data of current game into savedGame.txt
+	 */
 	public void saveToFile(){
 		PrintWriter fileWrite = FileUtils.openToWrite("savedGame.txt");
 		fileWrite.print("Score ");
