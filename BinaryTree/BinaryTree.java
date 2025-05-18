@@ -55,7 +55,10 @@ public class BinaryTree<E extends Comparable<E>> {
             }
         }
     }
-
+	
+	/**Recursive version of add. 
+	 * @param value the value to put into the tree
+	 */
     public void addRecursion(E value) {
         if (root == null) {
             root = new TreeNode<E>(value);
@@ -64,6 +67,11 @@ public class BinaryTree<E extends Comparable<E>> {
         }
     }
 
+	/**Helper method for recursive version. Determines if value
+	 * is on left or right of subtree and recur accordingly
+	 * @param value
+	 * @param subroot, the current part of the tree we are adding value to
+	 */
     public void addRecursionHelper(E value, TreeNode<E> subRoot) {
         if (subRoot == null) {
             return;
@@ -96,6 +104,8 @@ public class BinaryTree<E extends Comparable<E>> {
         System.out.println();
     }
 
+	/**Inorder helper adds all values to an arraylist in order
+	 */
     private void printInorderHelper(TreeNode<E> curr, ArrayList<TreeNode<E>> order) { 
         if (curr == null) return;
         printInorderHelper(curr.getLeft(), order);
@@ -111,6 +121,8 @@ public class BinaryTree<E extends Comparable<E>> {
         System.out.println();
     }
 
+	/**Uses recursion to print each subtree in preorder
+	 */
     private void printPreOrderHelper(TreeNode<E> curr) { 
         if (curr == null) return;
         System.out.print(curr.getValue() + " ");
@@ -125,7 +137,9 @@ public class BinaryTree<E extends Comparable<E>> {
         printPostOrderHelper(root);
         System.out.println();
     }
-
+	
+	/**Uses recursion to print each subtree in postorder
+	 */
     private void printPostOrderHelper(TreeNode<E> curr) {
         if (curr == null) return;
         printPostOrderHelper(curr.getLeft());
@@ -145,6 +159,11 @@ public class BinaryTree<E extends Comparable<E>> {
         return balancedTree;
     }
 
+	/**Returns treenode that is root of a balanced tree given notes in order
+	 * @param nodes. all nodes in order
+	 * @param left. the left bound of the nodes that needs to be turned into bt
+	 * @param right. the right bound of the nodes that needs to be turned into bt
+	 */
     public TreeNode<E> balancedTreeHelper(ArrayList<TreeNode<E>> nodes, int left, int right) { 
         if (left > right) return null;
         int mid = (left + right) / 2;
@@ -164,6 +183,7 @@ public class BinaryTree<E extends Comparable<E>> {
     public void remove(E value) {
         root = remove(root, value);
     }
+    
     /**
      *	Remove value from Binary Tree
      *	@param node			the root of the subtree
@@ -195,7 +215,9 @@ public class BinaryTree<E extends Comparable<E>> {
         }
         return node;
     }
-
+	
+	/**Given root, find the smallest element in the right subtree
+	 */
     public TreeNode<E> getSuccessor(TreeNode<E> node) { 
         node = node.getRight();
         while (node.getLeft() != null) {
