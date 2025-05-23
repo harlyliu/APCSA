@@ -24,6 +24,10 @@ public class BinaryTree<E extends Comparable<E>> {
     public BinaryTree(TreeNode<E> rootIn) {
         root = rootIn;
     }
+    
+    public TreeNode<E> getRoot(){
+		return root;
+	}
 
     /**	Field accessors and modifiers */
 
