@@ -100,12 +100,12 @@ public class BinaryTree<E extends Comparable<E>> {
      *	Print Binary Tree Inorder
      */
     public void printInorder() {
+		if (root == null) return;
         ArrayList<TreeNode<E>> nodes = new ArrayList<>();
         printInorderHelper(root, nodes);
         for (TreeNode<E> node : nodes) {
-            System.out.print(node.getValue() + " ");
+            System.out.print(node.getValue());
         }
-        System.out.println();
     }
 
 	/**Inorder helper adds all values to an arraylist in order
