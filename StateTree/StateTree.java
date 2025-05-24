@@ -12,9 +12,11 @@ public class StateTree
 {
 	// Fields
 	private BinaryTree<State> bTree;
-	private final String IN_FIlE = "states2.txt";	// input file
+	private final String IN_FILE = "states2.txt";	// input file
 	
-	public StateTree() { }
+	public StateTree() {
+		bTree = new BinaryTree<State>();
+	}
 	
 	public static void main ( String [] args )
 	{
@@ -55,10 +57,26 @@ public class StateTree
 						System.out.println();
 						break;
 					case '3' :
-						find();
+						String inp1;
+						do{
+							inp1 = Prompt.getString("Enter state name to search (Q to quit)");
+							State found = find(bTree.getRoot(), inp1);
+							if (found == null){
+								System.out.println(inp1 + " not found");
+							}
+							else{
+								System.out.println(found);
+							}
+						}while(!inp1.equalsIgnoreCase("q"));
+						System.out.println();
 						break;
 					case '4' :
-						delete();
+						String inp2;
+						do{
+							inp2 = Prompt.getString("Enter state name to delete (Q to quit)");
+							delete(inp2);
+						}while(!inp2.equalsIgnoreCase("q"));
+						System.out.println();
 						break;
 					case '5' :
 						System.out.println("Number of nodes = " + size(bTree.getRoot()));
@@ -66,9 +84,15 @@ public class StateTree
 						break;
 					case '6' :
 						clear();
+						System.out.println();
 						break;
 					case '7' :
-						printLevel();
+						int inp3;
+						do{
+							inp3 = Prompt.getInt("Enter level value to print (-1 to quit)");
+							printLevel(inp3);
+						}while(inp3 != -1);
+						System.out.println();
 						break;
 					case '8' :
 						if (depth(bTree.getRoot(), -1) > -1)
@@ -85,6 +109,7 @@ public class StateTree
 	
 	/**	Load the data into the binary tree */
 	public void loadData() {
+		bTree = new BinaryTree<State>();
 		Scanner fileIn = FileUtils.openToRead(IN_FILE);
 		String name;			// state name
 		String abbreviation;	// state abbreviation
@@ -113,10 +138,30 @@ public class StateTree
 	}
 	
 	/**	Find the node in the tree */
-	public void find() { }
+	public State find(TreeNode<State> curr, String stateName) {
+		if (curr == null) 
+			return null;
+		if (curr.getValue().getName().equalsIgnoreCase(stateName))
+			return curr.getValue();
+		State leftRes = find(curr.getLeft(), stateName);
+		State rightRes = find(curr.getRight(), stateName);
+		if (leftRes != null) return leftRes;
+		if (rightRes != null) return rightRes;
+		return null;
+		
+		
+	}
 	
 	/** Delete a node */
-	public void delete() { }
+	public void delete(String stateName) {
+		State foundState = find(bTree.getRoot(), stateName);
+		if (foundState == null){
+			System.out.println(stateName + " not found");
+			return;
+		}
+		bTree.remove(foundState);
+		System.out.println(foundState.getName() + " has been deleted!!");
+	}
 	
 	/**	Returns the number of nodes in the subtree - recursive
 	 *	@param node		the root of the subtree
@@ -129,17 +174,22 @@ public class StateTree
 	
 	/**	Clear out the binary tree */
 	public void clear() { 
-		bTree = null;
+		bTree = new BinaryTree<State>();
+		System.out.println("Data successfully cleared.");
 	}
 	
 	/**	Print the level requested */
 	public void printLevel(int n) {
-		ArrayList<State> currLevel = new ArrayList<State>();
-		currLevel.add(bTree);
-		int cur = 1;
+		if (n < 0){
+			System.out.println();
+			return;
+		}
+		ArrayList<TreeNode<State>> currLevel = new ArrayList<TreeNode<State>>();
+		currLevel.add(bTree.getRoot());
+		int cur = 0;
 		while (cur < n){
-			ArrayList<State> newLevel = new ArrayList<State>();
-			for (State st: currLevel){
+			ArrayList<TreeNode<State>> newLevel = new ArrayList<TreeNode<State>>();
+			for (TreeNode<State> st: currLevel){
 				if (st.getLeft() != null)
 					newLevel.add(st.getLeft());
 				if (st.getRight() != null)
@@ -148,7 +198,10 @@ public class StateTree
 			currLevel = newLevel;
 			cur++;
 		}
-		System.out.println(currLevel);
+		for (TreeNode<State> curSt: currLevel){
+			System.out.print(curSt.getValue().getName() + " ");
+		}
+		System.out.println();
 	}
 	
 	/**	Returns the depth of the subtree - recursive
